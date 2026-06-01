@@ -54,19 +54,20 @@
 
 #include <tf/transform_broadcaster.h>
 #define CONTROL_HZ 125.0
-//csv保存用の変数
+//variables for control and CSV file
 int end_sign = 0;
 double glo_error;
 double glo_kp, glo_ki, glo_kd;
 int glo_count;
-geometry_msgs::Vector3 glo_vel; //速度のベクトル
+//Init global variables but with ros message types!!
+geometry_msgs::Vector3 glo_vel; //in vector form
 std::string glo_method;
 geometry_msgs::Pose glo_target_pose;
-geometry_msgs::TwistStamped glo_position_feedback; //現在位置 
-geometry_msgs::WrenchStamped glo_force_torque_calibrated;  // 現在の偏差除去した力トルク
+geometry_msgs::TwistStamped glo_position_feedback; //Current Position
+geometry_msgs::WrenchStamped glo_force_torque_calibrated;  //Current bias-corrected force-torque
 geometry_msgs::WrenchStamped glo_bias;
-geometry_msgs::Wrench glo_target_force;  //目標力
-geometry_msgs::Wrench glo_raw_force;  //目標力
+geometry_msgs::Wrench glo_target_force;  //Target Force
+geometry_msgs::Wrench glo_raw_force;  //Force from sensor
 geometry_msgs::WrenchStamped glo_force_torque_LPF;     //ローパスした力トルク
 geometry_msgs::WrenchStamped glo_recieved_msg;
 
@@ -75,6 +76,7 @@ std::vector<geometry_msgs::Pose> massage_points_forCSV; // 施術位置をcsv保
 using namespace std;
 
 // 過大な力を検知したときの終了関連
+// For case of detecting excessive force
 struct SafetyRetraction : public std::exception {};
 
 jaka_msgs::ServoMoveEnable enable_state;
@@ -83,6 +85,7 @@ jaka_msgs::ServoMoveEnable enable_state;
     ros::ServiceClient movj;
 
 //subscribeするときのリスナー準備
+//get
 class positionsubscribe{
     public:
         geometry_msgs::TwistStamped data;
@@ -1255,6 +1258,7 @@ int main(int argc, char *argv[]){
     ros::Rate calib_timer(CONTROL_HZ);
     ros::Rate control_timer(CONTROL_HZ);
 
+    //init Listener 
     CanonListener force_torque;
     CoordinatedForceTorqueListener force_torque_coordinated;
     EEFListener end_effector;
@@ -1301,6 +1305,7 @@ int main(int argc, char *argv[]){
     ros::Subscriber right_ankle_sub = node_handle.subscribe("/right_ankle", 1, &skeletonRAListener::callback, &skeletonRA);
     ros::Subscriber left_ankle_sub = node_handle.subscribe("/left_ankle", 1, &skeletonLAListener::callback, &skeletonLA);
     ros::Subscriber positions_sub = nh.subscribe("/jaka_driver/tool_position", 10, &positionsubscribe::callback, &current_position);
+    //init Publisher
     ros::Publisher target_pose_pub = nh.advertise<geometry_msgs::Pose>("/record/target_pose_pub",1);
     ros::Publisher reference_force_pub = nh.advertise<geometry_msgs::WrenchStamped>("/record/reference_force",1);
     ros::Publisher method_pub = nh.advertise<std_msgs::Int32>("/massage_method",1);
