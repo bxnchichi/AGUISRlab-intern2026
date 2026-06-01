@@ -68,10 +68,10 @@ geometry_msgs::WrenchStamped glo_force_torque_calibrated;  //Current bias-correc
 geometry_msgs::WrenchStamped glo_bias;
 geometry_msgs::Wrench glo_target_force;  //Target Force
 geometry_msgs::Wrench glo_raw_force;  //Force from sensor
-geometry_msgs::WrenchStamped glo_force_torque_LPF;     //ローパスした力トルク
+geometry_msgs::WrenchStamped glo_force_torque_LPF;    //Low-pass filtered force-torque
 geometry_msgs::WrenchStamped glo_recieved_msg;
 
-std::vector<geometry_msgs::Pose> massage_points_forCSV; // 施術位置をcsv保存して確認するやつ
+std::vector<geometry_msgs::Pose> massage_points_forCSV; // Positions for massage saved in CSV
 
 using namespace std;
 
