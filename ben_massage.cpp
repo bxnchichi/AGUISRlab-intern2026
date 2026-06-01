@@ -64,18 +64,18 @@ geometry_msgs::Vector3 glo_vel; //in vector form
 std::string glo_method;
 geometry_msgs::Pose glo_target_pose;
 geometry_msgs::TwistStamped glo_position_feedback; //Current Position
+// wrench contains force and torque in x, y, z
 geometry_msgs::WrenchStamped glo_force_torque_calibrated;  //Current bias-corrected force-torque
 geometry_msgs::WrenchStamped glo_bias;
 geometry_msgs::Wrench glo_target_force;  //Target Force
 geometry_msgs::Wrench glo_raw_force;  //Force from sensor
-geometry_msgs::WrenchStamped glo_force_torque_LPF;    //Low-pass filtered force-torque
+geometry_msgs::WrenchStamped glo_force_torque_LPF;  //Low-pass filtered force-torque
 geometry_msgs::WrenchStamped glo_recieved_msg;
 
 std::vector<geometry_msgs::Pose> massage_points_forCSV; // Positions for massage saved in CSV
 
 using namespace std;
 
-// 過大な力を検知したときの終了関連
 // For case of detecting excessive force
 struct SafetyRetraction : public std::exception {};
 
@@ -85,7 +85,6 @@ jaka_msgs::ServoMoveEnable enable_state;
     ros::ServiceClient movj;
 
 //subscribeするときのリスナー準備
-//get
 class positionsubscribe{
     public:
         geometry_msgs::TwistStamped data;
@@ -109,6 +108,9 @@ class EEFListener{
         }
 };
 
+// listener for force-torque sensor change coordinate
+// sensor X-axis to Robot Y-axis
+// sensor Y-axis to Robot -X-axis
 class CanonListener{
     public:
         geometry_msgs::WrenchStamped data;
@@ -141,6 +143,8 @@ class CoordinatedForceTorqueListener{
         void callback(const geometry_msgs::WrenchStamped &msg){
             //手先角度が変わってもロボットベース座標系に合わせるもの
             // z方向は圧縮力にする（−１をかける）
+            //probably Force in Z axis into the compression force which + is pushing and - is pulling
+        
             this->data = msg;
             this->data.wrench.force.z = this->data.wrench.force.z * (-1.0);
             glo_force_torque_calibrated = msg;
@@ -481,7 +485,7 @@ geometry_msgs::WrenchStamped calc_bias(std::vector<geometry_msgs::WrenchStamped>
     bias.wrench.force.z = mean(force_z_data);
     bias.wrench.torque.x = mean(torque_x_data);
     bias.wrench.torque.y = mean(torque_y_data);
-    bias.wrench.torque.z = mean(torque_z_data);
+    bias.wrench.torque.z = mean(torque_z_data)
     glo_bias = bias;
 
     return bias;
