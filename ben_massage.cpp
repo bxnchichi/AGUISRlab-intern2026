@@ -379,6 +379,7 @@ class skeletonLAListener{
 };
 
 //位置制御で目標の位置に達したか確認する関数
+//Determine if the robot has reached the target position in position control
 int check_position(const geometry_msgs::TwistStamped &current_position, const geometry_msgs::Pose target){
     int reached = 0;
     double x, y, z;
@@ -392,12 +393,14 @@ int check_position(const geometry_msgs::TwistStamped &current_position, const ge
     return reached;
 }
 
+// change form of the orientation storing from RPY to geometry_msgs::Quaternion
 geometry_msgs::Quaternion rpy_to_geometry_quat(double roll, double pitch, double yaw){
 	tf::Quaternion quat = tf::createQuaternionFromRPY(roll, pitch, yaw);
 	geometry_msgs::Quaternion geometry_quat;
 	quaternionTFToMsg(quat, geometry_quat);
 	return geometry_quat;
 }
+
 
 void geometry_quat_to_rpy(double& roll, double& pitch, double& yaw, geometry_msgs::Quaternion geometry_quat){
 	tf::Quaternion quat;
