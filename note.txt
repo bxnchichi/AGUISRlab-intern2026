@@ -1,0 +1,26 @@
+Aoyama Gakuin University
+5-10-1 Fuchinobe, Chuo-ku, Sagamihara-shi, Kanagawa-ken 252-5258
+Japan
+Assoc. Prof. Tasaki Ryosuke
++8142-759-6209
+tasaki@me.aoyama.ac.jp
+Assoc. Prof. Tasaki Ryosuke
+
+1 Chome-14-6 Kanumadai, Chuo Ward, Sagamihara, Kanagawa 252-0233 ญี่ปุ่น
+
+note:
+Scope: muscle only, detect stiffness, react accordingly, flat orientation only (no shoulder)
+Find ideal force detecting system
+- case1: gloves with FSR attached -> interlink FSR sensor (11840 yen, take time to make)
+- case2: FSR attached on model -> Tekscan pressure mat() or DIY pressure mat ()
+Find how much motion capture can record
+- Is finger movement recorded?
+- Can model deformation be recorded?
+- how much CSV can be process
+Ask related researcher to find out which can be used
+- model: required new one or already have (Takeru)
+- stiffness of muscle: Collecting method exist? (Daichi and Harada)
+- model tool head: Can it be change? (Harada)
+Record case: 2 variable
+- stiffness: hard and soft
+- Customer request: heavy, moderate and light
