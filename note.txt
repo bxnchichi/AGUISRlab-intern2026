@@ -12,7 +12,7 @@ note:
 Scope: muscle only, detect stiffness, react accordingly, flat orientation only (no shoulder)
 Find ideal force detecting system
 - case1: gloves with FSR attached -> interlink FSR sensor (11840 yen, take time to make)
-- case2: FSR attached on model -> Tekscan pressure mat() or DIY pressure mat ()
+- case2: FSR attached on model -> Tekscan pressure mat(15000000 yen, high precision) or DIY pressure mat (49500, more resolution more expensive)
 Find how much motion capture can record
 - Is finger movement recorded?
 - Can model deformation be recorded?
@@ -21,6 +21,6 @@ Ask related researcher to find out which can be used
 - model: required new one or already have (Takeru)
 - stiffness of muscle: Collecting method exist? (Daichi and Harada)
 - model tool head: Can it be change? (Harada)
-Record case: 2 variable
+Record cases: 2 variable 6 cases
 - stiffness: hard and soft
 - Customer request: heavy, moderate and light
