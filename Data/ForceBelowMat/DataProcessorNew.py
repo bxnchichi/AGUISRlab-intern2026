@@ -253,155 +253,157 @@ def plotFolder(folder):
             print(e)
     return means
 
+def average_curves(curve1, curve2):
+
+    min_len = min(len(curve1), len(curve2))
+
+    return (curve1[:min_len] + curve2[:min_len]) / 2
+
 def plotMeanByTestPiece(means):
 
     names = list(means.keys())
 
-    odd_pair_indices = []
-    even_pair_indices = []
+    odd_pairs = []
+    even_pairs = []
 
     for pair in range(len(names) // 2):
 
-        start = pair * 2
+        idx1 = pair * 2
+        idx2 = idx1 + 1
 
-        if pair % 2 == 0:
-            odd_pair_indices.extend([start, start + 1])
-        else:
-            even_pair_indices.extend([start, start + 1])
-
-    # ---------- Odd pairs ----------
-    plt.figure(figsize=(12, 6))
-
-    odd_colors = [
-        plt.cm.Reds(0.5),
-        plt.cm.Reds(0.8),
-
-        plt.cm.Oranges(0.5),
-        plt.cm.Oranges(0.8),
-
-        plt.cm.Greys(0.5),
-        plt.cm.Greys(0.8),
-    ]
-
-    for color_idx, idx in enumerate(odd_pair_indices):
-
-        if idx >= len(names):
+        if idx2 >= len(names):
             continue
 
-        name = names[idx]
-        mean_curve = means[name]
+        pair_mean = average_curves(
+            means[names[idx1]],
+            means[names[idx2]]
+        )
+
+        pair_name = f"{names[idx1]} + {names[idx2]}"
+
+        if pair % 2 == 0:
+            odd_pairs.append((pair_name, pair_mean))
+        else:
+            even_pairs.append((pair_name, pair_mean))
+
+    # ---------- Odd ----------
+    plt.figure(figsize=(12, 6))
+
+    colors = [
+        plt.cm.Reds(0.7),
+        plt.cm.Oranges(0.7),
+        plt.cm.Greys(0.7),
+    ]
+
+    
+
+    for i, (name, curve) in enumerate(odd_pairs):
 
         plt.plot(
-            np.arange(len(mean_curve)),
-            mean_curve,
-            color=odd_colors[color_idx],
-            linewidth=2,
+            np.arange(len(curve)),
+            curve,
+            color=colors[i],
+            linewidth=3,
             label=name
         )
 
     plt.title("Tests on Hard Pieces")
     plt.xlabel("Aligned Sample")
     plt.ylabel("LPF_Fz")
-    plt.xlim(0, 175)
     plt.grid(True)
+    plt.xlim(0, 175)
     plt.legend()
     plt.tight_layout()
 
-    # ---------- Even pairs ----------
+    # ---------- Even ----------
     plt.figure(figsize=(12, 6))
 
-    even_colors = [
-        plt.cm.Blues(0.5),
-        plt.cm.Blues(0.8),
-
-        plt.cm.Greens(0.5),
-        plt.cm.Greens(0.8),
-
-        plt.cm.Purples(0.5),
-        plt.cm.Purples(0.8),
+    colors = [
+        plt.cm.Blues(0.7),
+        plt.cm.Greens(0.7),
+        plt.cm.Purples(0.7),
     ]
 
-    for color_idx, idx in enumerate(even_pair_indices):
-
-        if idx >= len(names):
-            continue
-
-        name = names[idx]
-        mean_curve = means[name]
+    for i, (name, curve) in enumerate(even_pairs):
 
         plt.plot(
-            np.arange(len(mean_curve)),
-            mean_curve,
-            color=even_colors[color_idx],
-            linewidth=2,
+            np.arange(len(curve)),
+            curve,
+            color=colors[i],
+            linewidth=3,
             label=name
         )
 
     plt.title("Tests on Soft Pieces")
     plt.xlabel("Aligned Sample")
     plt.ylabel("LPF_Fz")
-    plt.xlim(0, 175)
     plt.grid(True)
+    plt.xlim(0, 175)
     plt.legend()
     plt.tight_layout()
 
     plt.show()
 
-
 def plotMeanByContactSurface(means):
 
     names = list(means.keys())
 
-    files_per_graph = 4
+    for graph_idx in range(0, len(names), 4):
 
-    for graph_idx in range(0, len(names), files_per_graph):
+        if graph_idx + 3 >= len(names):
+            break
 
         plt.figure(figsize=(10, 6))
 
-        graph_names = names[graph_idx:graph_idx + files_per_graph]
+        mean1 = average_curves(
+            means[names[graph_idx]],
+            means[names[graph_idx + 1]]
+        )
 
-        # Second pair: blue shades
-        pair2_colors = plt.cm.Blues([0.5, 0.8])
+        mean2 = average_curves(
+            means[names[graph_idx + 2]],
+            means[names[graph_idx + 3]]
+        )
 
-        # First pair: red shades
-        pair1_colors = plt.cm.Reds([0.5, 0.8])
+        plt.plot(
+            np.arange(len(mean1)),
+            mean1,
+            color=plt.cm.Reds(0.7),
+            linewidth=3,
+            label="Hard Surface"
+        )
 
-        colors = [
-            pair1_colors[0],
-            pair1_colors[1],
-            pair2_colors[0],
-            pair2_colors[1]
+        plt.plot(
+            np.arange(len(mean2)),
+            mean2, 
+            linewidth=3,
+            label="Soft Surface"
+        )
+
+        surface_titles = [
+            "SidePalm",
+            "Thumb",
+            "UpperPalm"
         ]
 
-        for i, name in enumerate(graph_names):
+        title_idx = graph_idx // 4
 
-            mean_curve = means[name]
-            t = np.arange(len(mean_curve))
-
-            plt.plot(
-                t,
-                mean_curve,
-                color=colors[i],
-                linewidth=2,
-                label=name
-            )
-
+        if title_idx < len(surface_titles):
+            plt.title(surface_titles[title_idx])
+        else:
+            plt.title(f"Surface {title_idx + 1}")
         plt.xlabel("Aligned Sample")
         plt.ylabel("LPF_Fz")
-        plt.title(
-            f"Mean Force Profiles (Files {graph_idx+1}-{graph_idx+len(graph_names)})"
-        )
         plt.grid(True)
-        plt.legend()
         plt.xlim(0, 175)
+        plt.legend()
         plt.tight_layout()
 
     plt.show()
 
-
 def main():
 
-    folder = Path("Data/ForceBelowEX")
+    folder = Path("Data/ForceBelowMat/ForceBelowEX")
     means = plotFolder(folder) #plot all files and get means
     plotMeanByContactSurface(means)
     plotMeanByTestPiece(means)

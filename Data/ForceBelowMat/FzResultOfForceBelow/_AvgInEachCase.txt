@@ -1,0 +1,20 @@
+| Contact Surface | Material | Mean Rise Time (s) | Mean Plateau Force (N) |
+| --------------- | -------- | -----------------: | ---------------------: |
+| Side Palm       | Hard     |              0.363 |                  64.38 |
+| Side Palm       | Soft     |              0.367 |                  43.85 |
+| Thumb           | Hard     |              0.347 |                  63.30 |
+| Thumb           | Soft     |              0.315 |                  48.76 |
+| Upper Palm      | Hard     |              0.579 |                  66.07 |
+| Upper Palm      | Soft     |              0.349 |                  51.61 |
+
+| Contact Surface | Mean Rise Time (s) | Mean Plateau Force (N) |
+| --------------- | -----------------: | ---------------------: |
+| Side Palm       |              0.365 |                  54.12 |
+| Thumb           |              0.331 |                  56.03 |
+| Upper Palm      |              0.464 |                  58.84 |
+
+
+| Material | Mean Rise Time (s) | Mean Plateau Force (N) |
+| -------- | -----------------: | ---------------------: |
+| Hard     |              0.430 |                  64.58 |
+| Soft     |              0.344 |                  48.74 |
