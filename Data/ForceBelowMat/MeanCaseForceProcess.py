@@ -403,7 +403,7 @@ def plotMeanByContactSurface(means):
 
 def main():
 
-    folder = Path("Data/ForceBelowMat/ForceBelowEX")
+    folder = Path("Data/ForceBelowMat/CasesTakes")
     means = plotFolder(folder) #plot all files and get means
     plotMeanByContactSurface(means)
     plotMeanByTestPiece(means)

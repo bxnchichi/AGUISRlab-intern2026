@@ -228,7 +228,7 @@ def plotFile(filepath):
         post_samples=150
     )
     mean =findMeans(aligned)
-    # plot_aligned(aligned, t, mean, filepath.stem)
+    plot_aligned(aligned, t, mean, filepath.stem)
     return mean
 
 def plotFolder(folder):
@@ -401,7 +401,7 @@ def plotMeanByContactSurface(means):
 
 def main():
 
-    folder = Path("Data/ForceBelowMat/ForceBelowEX")
+    folder = Path("Data/ForceBelowMat/CasesTakes")
     means = plotFolder(folder) #plot all files and get means
     plotMeanByContactSurface(means)
     plotMeanByTestPiece(means)
