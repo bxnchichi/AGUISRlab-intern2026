@@ -24,3 +24,40 @@ Ask related researcher to find out which can be used
 Record cases: 2 variable 6 cases
 - stiffness: hard and soft
 - Customer request: heavy, moderate and light
+
+Presentation -> what do I need to do.
+
+
+first applying force on small model like silicon or other material available in lab with force sensor on the bottom
+By the same time, ask Tasaki professor about the force sensor circuit making and get his permission to do so.
+
+Tomorrow better to have slide in the Presentation
+
+
+Regarding your research topic, I would like to suggest a study on physical-contact HRI,
+represented by massage robots. The main idea is to investigate how a robot can understand
+the physical state of a contacted body part through touch and adapt its contact behavior accordingly.
+
+As the first step, please try measuring your own finger and hand motions using the Manus Grove device
+available in our laboratory. This will help you become familiar with motion measurement and understand
+how human hand movements can be recorded and analyzed.
+
+After that, we can prepare two simple body-part models: one representing a hard region and the other representing a soft region.
+
+Then, we will measure how a human therapist touches each model, including contact force, pressing motion, pressing speed, contact position, and motion timing.
+
+By analyzing these data, we will try to clarify how human touch behavior changes depending on the stiffness of the contacted body part.
+
+The goal is to develop a basic HRI system in which the robot first recognizes whether the contacted region is hard or soft from contact information, and then reproduces an appropriate touch motion for each condition.
+
+In other words, the robot should not only “touch” the human body, but also interact through touch by sensing the physical condition of the body and changing its behavior.
+
+As a rough plan for the two-month internship, we can proceed from basic motion measurement with Manus Grove, then move on to the preparation of hard and soft body-part models, a small measurement experiment, data analysis, and discussion of robot behavior design.
+
+If time allows, we may also implement a simple robot motion based on the measured data.
+
+Through this project, you can experience the full research flow: experimental setup, human motion measurement, data analysis, and robot behavior design.
+
+
+list components to buy and where to buy early -> is solder available
+measure force method 2 first
