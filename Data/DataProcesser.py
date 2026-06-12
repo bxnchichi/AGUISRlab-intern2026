@@ -299,7 +299,7 @@ def plotMeanByTestPiece(means):
             label=name
         )
 
-    plt.title("Odd Pairs")
+    plt.title("Tests on Hard Pieces")
     plt.xlabel("Aligned Sample")
     plt.ylabel("LPF_Fz")
     plt.xlim(0, 175)
@@ -337,7 +337,7 @@ def plotMeanByTestPiece(means):
             label=name
         )
 
-    plt.title("Even Pairs")
+    plt.title("Tests on Soft Pieces")
     plt.xlabel("Aligned Sample")
     plt.ylabel("LPF_Fz")
     plt.xlim(0, 175)
