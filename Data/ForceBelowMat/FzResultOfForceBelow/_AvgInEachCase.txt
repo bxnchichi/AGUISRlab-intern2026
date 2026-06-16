@@ -18,3 +18,29 @@
 | -------- | -----------------: | ---------------------: |
 | Hard     |              0.430 |                  64.58 |
 | Soft     |              0.344 |                  48.74 |
+
+
+| Contact Surface | Material | Total Plateau Trials |
+| --------------- | -------- | -------------------: |
+| Side Palm       | Hard     |                   13 |
+| Side Palm       | Soft     |                   10 |
+| Thumb           | Hard     |                   13 |
+| Thumb           | Soft     |                   10 |
+| Upper Palm      | Hard     |                   11 |
+| Upper Palm      | Soft     |                   11 |
+
+
+| Contact Surface | Material | Trial | Avg Rise Time (s) | Avg Plateau Force (N) | Plateau Trials |
+| --------------- | -------- | ----: | ----------------: | --------------------: | -------------: |
+| Side Palm       | Hard     |     1 |             0.357 |                 67.75 |              6 |
+| Side Palm       | Hard     |     2 |             0.369 |                 61.01 |              7 |
+| Side Palm       | Soft     |     1 |             0.462 |                 42.77 |              5 |
+| Side Palm       | Soft     |     2 |             0.272 |                 44.92 |              5 |
+| Thumb           | Hard     |     1 |             0.317 |                 64.82 |              6 |
+| Thumb           | Hard     |     2 |             0.376 |                 61.78 |              7 |
+| Thumb           | Soft     |     1 |             0.328 |                 43.82 |              5 |
+| Thumb           | Soft     |     2 |             0.302 |                 53.70 |              5 |
+| Upper Palm      | Hard     |     1 |             0.430 |                 63.82 |              5 |
+| Upper Palm      | Hard     |     2 |             0.728 |                 68.31 |              6 |
+| Upper Palm      | Soft     |     1 |             0.320 |                 43.02 |              5 |
+| Upper Palm      | Soft     |     2 |             0.378 |                 60.20 |              6 |

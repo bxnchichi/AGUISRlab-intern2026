@@ -1,0 +1,5 @@
+Video is taken with mmirror selfie setting on therefore the axis is not same with real world
+X-axis: to the the left of the frame
+Y-axis: point to the camera
+Z-axis: downward
+(not correct by right-hand rule)

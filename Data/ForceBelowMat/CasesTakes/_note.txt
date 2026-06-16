@@ -1,0 +1,18 @@
+Tested subject:
+- Right Hand!!!!
+- Soft Silicon pad
+- Hard Silicon pad
+
+Used equipment:
+- Leptrino Force-Torque sensor
+- motion capture camera
+
+Testing axis: (Fx-Fy-Fz Compare can only be used to figure out the axis)
+X-axis -> to the wire of sensor
+Y-axis -> point to the bottom of sensor (logo)
+Z-axis -> toward sensor
+
+Caution:
+Pensaki is tip of the pen: Probably cannot be used
+ThumpSoft2 have an unwanted press beware
+Better if we got Marker info
