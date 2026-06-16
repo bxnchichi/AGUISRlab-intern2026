@@ -16,3 +16,4 @@ Caution:
 Pensaki is tip of the pen: Probably cannot be used
 ThumpSoft2 have an unwanted press beware
 Better if we got Marker info
+LPF_Fz max limit is at 73.88848
