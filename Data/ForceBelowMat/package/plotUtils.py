@@ -6,7 +6,7 @@ from scipy.signal import butter, filtfilt, savgol_filter
 
 sampling_rate = 100 
 
-
+#NAI
 #------------------------------------------------------------------------------------------------------------
 #    █████████   ████   ███                                                  
 #   ███░░░░░███ ░░███  ░░░                                               
@@ -21,7 +21,7 @@ sampling_rate = 100
 #                            ░░░░░░                                                   
 #-----------------------------------------------------------------------------------------------------------------------------
 
-def detect_rising_edges(csv_file, processed_column, column="LPF_Fz", on_threshold=10.0, off_threshold=5.0, min_gap=100):
+def detect_rising_edges(csv_file, processed_column, column="LPF_Fcz", on_threshold=10.0, off_threshold=5.0, min_gap=100):
     """
     Detect contact onset using hysteresis.
 
@@ -118,11 +118,11 @@ def signal_has_plateau(
 def align_events(
     signal,
     edge_indices,
-    pre_samples=100,
+    pre_samples=50,
     post_samples=300,
     peak_fraction=0.9,
     plateau_samples=20,
-    max_plateau_std=20
+    max_plateau_std=35
 ):
 
     aligned = []
@@ -330,6 +330,7 @@ def find_rise_time_and_plateau(
 
     rise_times = []
     plateau_means = []
+    plateau_std = []
 
     for edge in edge_indices:
 
@@ -342,7 +343,7 @@ def find_rise_time_and_plateau(
 
         peak = np.max(post_region)
         plateau_threshold = peak * peak_fraction
-
+        # print(peak)
         plateau_start = None
 
         for i in range(len(post_region) - plateau_samples):
@@ -352,11 +353,24 @@ def find_rise_time_and_plateau(
             if np.all(window >= plateau_threshold):
                 plateau_start = i
                 break
-
+        
         if plateau_start is None:
             continue
 
-        plateau_region = post_region[plateau_start:]
+        plateau_end = None
+
+        for i in range(len(post_region) - plateau_samples - plateau_start):
+
+            window = post_region[plateau_start + i: i  + plateau_start + plateau_samples]
+
+            if np.any(window <= plateau_threshold):
+                plateau_end = i + plateau_start
+                break
+
+        
+        
+        plateau_region = post_region[plateau_start:plateau_end]
+
 
         plateau_mean = np.mean(plateau_region)
 
@@ -364,11 +378,9 @@ def find_rise_time_and_plateau(
 
         rise_times.append(rise_time)
         plateau_means.append(plateau_mean)
+        plateau_std.append(np.std(plateau_region))
 
-    return np.array(rise_times), np.array(plateau_means)
-
-
-
+    return np.array(rise_times), np.array(plateau_means), np.array(plateau_std)
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #  ███████████  ████            █████       ████      █████████   ███                                ████ 
@@ -389,11 +401,11 @@ def plot_aligned(aligned, time_axis, mean_profile, filepath, command, processed_
     plt.figure(figsize=(10, 6))
 
     # Individual trials
-    i = 1
+    # i = 1
     for segment in aligned:
-        print(f"Trial no.{i} -> S.D. = {np.std(segment)}")
+        # print(f"Trial no.{i} -> S.D. = {np.std(segment)}")
         plt.plot(time_axis, segment, alpha=0.5)
-        i += 1
+        # i += 1
 
     # Plot mean as dashed line
     plt.plot(
@@ -426,30 +438,35 @@ def plotAlignedFile(filepath, command, processed_column="LPF_Fz", output_folder=
 
     # print("Detected edges:", edges)
 
-    rise_times, plateau_means = find_rise_time_and_plateau(
+    rise_times, plateau_means, plateau_std = find_rise_time_and_plateau(
         signal,
         edges,
         fs=100
     )
 
-    # print("Rise times (s):")
-    # print(rise_times)
+    print("Rise times (s):")
+    print(rise_times)
 
-    # print("Plateau means (N):")
-    # print(plateau_means)
+    print("Plateau means (N):")
+    print(plateau_means)
 
-    # print(f"Average rise time: {np.mean(rise_times):.3f} s")
-    # print(f"Average plateau force: {np.mean(plateau_means):.2f} N")
+    print("Plateau standard deviation (N):")
+    print(plateau_std)
+
+    print(f"Average rise time: {np.mean(rise_times):.3f} s")
+    print(f"Average plateau force: {np.mean(plateau_means):.2f} N")
+    print(f"Average plateau S.D.: {np.mean(plateau_std):.2f} N")
+
 
 
     aligned, t = align_events(
         Processed_signal,
         edges,
         pre_samples=50,
-        post_samples=400
+        post_samples=300
     )
     mean = findMeans(aligned)
-    plot_aligned(aligned, t, mean, filepath, command, processed_column=processed_column, output_folder = output_folder)
+    # plot_aligned(aligned, t, mean, filepath, command, processed_column=processed_column, output_folder = output_folder)
     return mean
 
 def plotAlignedFolder(folder, command,  processed_column="LPF_Fz", output_folder = None):
@@ -474,8 +491,7 @@ def plotAlignedFolder(folder, command,  processed_column="LPF_Fz", output_folder
             print(e)
     return means
 
-#plt.show only
-def plotMeanByTestPiece(means, processed_column="LPF_Fz"):
+def plotMeanByTestPiece(means, command, processed_column="LPF_Fz", output_folder = None):
 
     names = list(means.keys())
 
@@ -528,6 +544,7 @@ def plotMeanByTestPiece(means, processed_column="LPF_Fz"):
     plt.grid(True)
     plt.legend()
     plt.tight_layout()
+    visualizePlot(command, output_folder=output_folder, name = 'AllCSVMatHard')
 
     # ---------- Even pairs ----------
     plt.figure(figsize=(12, 6))
@@ -566,15 +583,15 @@ def plotMeanByTestPiece(means, processed_column="LPF_Fz"):
     plt.grid(True)
     plt.legend()
     plt.tight_layout()
+    visualizePlot(command, output_folder=output_folder, name = "AllCSVMatSoft")
 
-    plt.show()
-
-def plotMeanByContactSurface(means, processed_column="LPF_Fz"):
+def plotMeanByContactSurface(means, command, processed_column="LPF_Fz", output_folder = None):
 
     names = list(means.keys())
 
     files_per_graph = 4
 
+    nameList = ['AllCSVSidePalm', 'AllCSVThump', 'AllCSVUpperPalm']
     for graph_idx in range(0, len(names), files_per_graph):
 
         plt.figure(figsize=(10, 6))
@@ -616,9 +633,9 @@ def plotMeanByContactSurface(means, processed_column="LPF_Fz"):
         plt.legend()
         plt.xlim(0, 175)
         plt.tight_layout()
-    plt.show()
+        visualizePlot(command, output_folder=output_folder, name = nameList[graph_idx//4])
 
-def plotMeanByTestPieceCases(means, processed_column="LPF_Fz"):
+def plotMeanByTestPieceCases(means, command, processed_column="LPF_Fz", output_folder = None):
 
     names = list(means.keys())
 
@@ -673,6 +690,7 @@ def plotMeanByTestPieceCases(means, processed_column="LPF_Fz"):
     plt.xlim(0, 175)
     plt.legend()
     plt.tight_layout()
+    visualizePlot(command, output_folder=output_folder, name = "MeanCaseMatHard")
 
     # ---------- Even ----------
     plt.figure(figsize=(12, 6))
@@ -700,13 +718,13 @@ def plotMeanByTestPieceCases(means, processed_column="LPF_Fz"):
     plt.xlim(0, 175)
     plt.legend()
     plt.tight_layout()
+    visualizePlot(command, output_folder=output_folder, name = "MeanCaseMatSoft")
 
-    plt.show()
-
-def plotMeanByContactSurfaceCases(means, processed_column="LPF_Fz"):
+def plotMeanByContactSurfaceCases(means, command, processed_column="LPF_Fz", output_folder = None):
 
     names = list(means.keys())
 
+    nameList = ['MeanCaseSidePalm', 'MeanCaseThump', 'MeanCaseUpperPalm']
     for graph_idx in range(0, len(names), 4):
 
         if graph_idx + 3 >= len(names):
@@ -757,6 +775,7 @@ def plotMeanByContactSurfaceCases(means, processed_column="LPF_Fz"):
         plt.xlim(0, 175)
         plt.legend()
         plt.tight_layout()
+        visualizePlot(command, output_folder=output_folder, name = nameList[graph_idx//4])
     plt.show()
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

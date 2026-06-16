@@ -1,0 +1,46 @@
+| File                   | Surface   | Hardness | Avg Rise Time (s) | Avg Plateau Force (N) | Avg Plateau SD (N) |
+| ---------------------- | --------- | -------- | ----------------: | --------------------: | -----------------: |
+| 1106TestSidePalmHard1  | SidePalm  | Hard     |             0.357 |                 73.78 |               0.73 |
+| 1106TestSidePalmHard2  | SidePalm  | Hard     |             0.371 |                 73.74 |               0.74 |
+| 1106TestSidePalmSoft1  | SidePalm  | Soft     |             0.462 |                 73.61 |               0.90 |
+| 1106TestSidePalmSoft2  | SidePalm  | Soft     |             0.272 |                 73.66 |               0.88 |
+| 1106TestThumpHard1     | Thump     | Hard     |             0.317 |                 73.79 |               0.64 |
+| 1106TestThumpHard2     | Thump     | Hard     |             0.376 |                 73.76 |               0.74 |
+| 1106TestThumpSoft1     | Thump     | Soft     |             0.328 |                 73.58 |               1.00 |
+| 1106TestThumpSoft2     | Thump     | Soft     |             0.302 |                 73.46 |               1.14 |
+| 1106TestUpperPalmHard1 | UpperPalm | Hard     |             0.430 |                 73.69 |               0.89 |
+| 1106TestUpperPalmHard2 | UpperPalm | Hard     |             0.730 |                 71.95 |               0.95 |
+| 1106TestUpperPalmSoft1 | UpperPalm | Soft     |             0.320 |                 73.63 |               0.95 |
+| 1106TestUpperPalmSoft2 | UpperPalm | Soft     |             0.378 |                 73.75 |               0.77 |
+
+Side Palm
+| Hardness | Mean Rise Time (s) | Mean Plateau Force (N) | Mean Plateau SD (N) |
+| -------- | -----------------: | ---------------------: | ------------------: |
+| Hard     |              0.364 |                  73.76 |                0.74 |
+| Soft     |              0.367 |                  73.64 |                0.89 |
+
+Thump
+| Hardness | Mean Rise Time (s) | Mean Plateau Force (N) | Mean Plateau SD (N) |
+| -------- | -----------------: | ---------------------: | ------------------: |
+| Hard     |              0.347 |                  73.78 |                0.69 |
+| Soft     |              0.315 |                  73.52 |                1.07 |
+
+UpperPalm
+| Hardness | Mean Rise Time (s) | Mean Plateau Force (N) | Mean Plateau SD (N) |
+| -------- | -----------------: | ---------------------: | ------------------: |
+| Hard     |              0.580 |                  72.82 |                0.92 |
+| Soft     |              0.349 |                  73.69 |                0.86 |
+
+S.D.
+| Surface   |  Hard SD |  Soft SD |
+| --------- | -------: | -------: |
+| SidePalm  |     0.74 |     0.89 |
+| Thump     | **0.69** | **1.07** |
+| UpperPalm |     0.92 |     0.86 |
+
+Rising Time
+| Surface   | Hard Rise Time (s) | Soft Rise Time (s) |
+| --------- | -----------------: | -----------------: |
+| SidePalm  |              0.364 |              0.367 |  
+| Thump     |          **0.347** |          **0.315** |
+| UpperPalm |          **0.580** |              0.349 |
