@@ -1,0 +1,11 @@
+https://makersportal.com/blog/2020/5/24/force-sensitive-resistors-fsrs-arduino?srsltid=AfmBOoo7MlrW9TX-WAt5PokMBf2FStox2Vvtw2VDOOh3LV23HwI4qGQ-
+
+What to do:
+- ask harada san for male-male jumper and test fsr
+- collect the data F-Ohm of fsr calculate for the magic number
+
+m = (10^(-b/a)/rFSR)^(-a)
+m = 10^(alog10(Rfsr) + b)
+linearlize to 
+log10(m) = alog10*(Rfsr) + b
+procedure: Collect data -> Scratter Plot -> Linear Regression -> 
