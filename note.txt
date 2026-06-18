@@ -61,3 +61,11 @@ Through this project, you can experience the full research flow: experimental se
 
 list components to buy and where to buy early -> is solder available
 measure force method 2 first
+
+
+Robot now 
+-> ROS communicate to control robot and manually command to the robot to adjust the applied force
+-> up and down along back, upper leg and butt 
+-> VR feedback to reduce stress of the patient
+-> Sensor: RGB-D camera (detect human posture and place to press)
+           probably force sensor to send the feedback back to the robot(to control the pressed force by selecting manually)

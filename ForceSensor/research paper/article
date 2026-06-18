@@ -8,4 +8,8 @@ m = (10^(-b/a)/rFSR)^(-a)
 m = 10^(alog10(Rfsr) + b)
 linearlize to 
 log10(m) = alog10*(Rfsr) + b
-procedure: Collect data -> Scratter Plot -> Linear Regression -> 
+procedure: Collect data(Fz-Ohm) -> set magic number -> Scratter Plot -> Linear Regression -> 
+
+https://www.academia.edu/20219310/A_conductive_polymer_sensor_for_measuring_external_finger_forces
+https://learn.adafruit.com/force-sensitive-resistor-fsr
+https://www.interlinkelectronics.com/downloads/datasheets/fsr-400-series-datasheet.pdf
