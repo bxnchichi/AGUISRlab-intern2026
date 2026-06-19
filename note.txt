@@ -65,7 +65,17 @@ measure force method 2 first
 
 Robot now 
 -> ROS communicate to control robot and manually command to the robot to adjust the applied force
--> up and down along back, upper leg and butt 
--> VR feedback to reduce stress of the patient
+-> up and down along back, upper leg and butt (another profesor recommend slide along the pressing line) 
+-> VR visual to reduce stress of the patient 
 -> Sensor: RGB-D camera (detect human posture and place to press)
            probably force sensor to send the feedback back to the robot(to control the pressed force by selecting manually)
+
+
+
+Equipment request list to Mr.Harada:
+- Solder head, lead, flux, unheaded wire
+- mass if exist (50g, 100g , 200g, ...)
+- force sensor (ask okada san or yoko san)
+- more male to male wire for more parallel FSR connect
+
+

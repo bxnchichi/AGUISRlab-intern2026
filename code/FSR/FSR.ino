@@ -20,8 +20,8 @@ void loop() {
   float R_FSR2;
 
   for (int ii=0;ii<avg_size;ii++){
-    sum_val1+=(analogRead(FSR_pin1)/1023.0)*5.0; // sum the 10-bit ADC ratio
-    sum_val2+=(analogRead(FSR_pin2)/1023.0)*5.0; // sum the 10-bit ADC ratio
+    sum_val1+=(analogRead(FSR_pin1)/1023.0)*5000.0; // sum the 10-bit ADC ratio
+    sum_val2+=(analogRead(FSR_pin2)/1023.0)*5000.0; // sum the 10-bit ADC ratio
     delay(10);
   }
   sum_val1/=avg_size; // take average
@@ -32,8 +32,8 @@ void loop() {
   // For Resistor on VCC
   // R_FSR = (R_0/1000) * (Vcc/sum_val)-1.0
   
-
-  Serial.println(String(sum_val1) + "," + String(sum_val2)); // print to serial port
+  // Serial.println(sum_val1);
+  Serial.println(String(sum_val1) + "," + String(sum_val2) + ",mV"); // print to serial port
   delay(10);
 
 }
