@@ -13,13 +13,20 @@ import serial
 UDP_IP = "127.0.0.1"
 UDP_PORT = 12345
 
-# Configure the serial port (Change 'COM3' to match your Windows device)
-port = 'COM7'
+# Configure the serial port for Leptrino force-torque sensor (Change 'COM3' to match your Windows device)
+port = 'COM4'
 baud_rate = 9600
 
 # ソケットの作成
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.bind((UDP_IP, UDP_PORT))
+
+# Serial communication with Arduino (See in device maneger for port)
+port = 'COM7'
+baud_rate = 9600
+loopTime = 0.112 #program loop time
+
+
 
 def lowpass_filter(prev_data, current_data, cutoff_freq, sample_freq):
     # フィルタ係数 alpha の計算
@@ -48,22 +55,33 @@ judge = 0.2
 touch = None
 
 try:
+    ser = serial.Serial(port, baud_rate, timeout=1)
+    print(f"Successfully opened {ser.name}")
+    time.sleep(2) # Give the device a moment to initialize
     while True:
+        # Read Leptrino
         readable, _, _ = select.select([sock], [], [], 0.001)
-
         if sock in readable:
             # UDPデータの受信（bytes型）
             udp_data, addr = sock.recvfrom(1024)
             latest_data = struct.unpack('7d', udp_data)
+
+        # Read Arduino
+        line = ser.readline()
 
         current_time = time.perf_counter()
 
         if current_time - last_display_time >= 0.009:#0.009秒間隔でモーキャプの値と最新のセンサの値を取得
             last_display_time = current_time
     
-            
+            if line:
+                Data = line.decode('utf-8').strip()
+                V1, V2, V3, unit = Data.split(',')
+            else:
+                continue
+
             if latest_data is not None:
-                #low pass filter
+                # Leptrino Force Sensor
                 Fx = latest_data[1]
                 Fy = latest_data[2]
                 Fz = latest_data[3]
@@ -73,7 +91,6 @@ try:
                 prev_x = LPF_Fx
                 prev_y = LPF_Fy
                 prev_z = LPF_Fz
-
                 force_magnitude = math.sqrt(LPF_Fx**2+LPF_Fy**2+LPF_Fy**2)
                 if force_magnitude > judge:#線を引いてる回数の判定
                     if touch == None:
@@ -81,10 +98,14 @@ try:
                     touch = count
                 else:
                     touch = None
-                
+
+                # FSR glove
+                V1 = float(V1)
+                V2 = float(V2)
                 
                 print('\rtime', '{:5.2f}'.format(current_time - start_time), '[s]',
-                'Force: Fx={:5.2f}, Fy={:5.2f}, Fz={:5.2f}'.format(latest_data[1], latest_data[2], latest_data[3]),
+                '\nForce: Fx={:5.2f}, Fy={:5.2f}, Fz={:5.2f}'.format(latest_data[1], latest_data[2], latest_data[3]),
+                '\nFSR Voltage[mV]: V1={:5.2f}, V2={:5.2f}'.format(V1, V2),
                 end='')
 
                 # Combine Data
@@ -104,6 +125,8 @@ try:
                     "Mz": latest_data[6],
                     "force_magnitude": force_magnitude,
                     "touch_count": touch,
+                    "Volt_FSR1": V1,
+                    "Volt_FSR2": V2,
                 }
                 collected_data.append(row)  # 格納用リストに追加
 
@@ -113,6 +136,8 @@ try:
 
 except KeyboardInterrupt:
     print("\nProgram interrupted by Ctrl+C.")
+except serial.SerialException as e:
+    print(f"Error opening or using port: {e}")
 finally:
     sock.close()
 

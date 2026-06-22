@@ -18,9 +18,11 @@ limit = []
 
 cutoff_frequency = 5 # カットオフ周波数 5Hz
 sampling_frequency = 100  # サンプリング周波数 100Hz
+sensorThers = [190, 190, 270]
 
 
-import numpy as np
+def threshold_reach(sensor_id, value, thresholds=sensorThers):
+    return float(value) * (float(value) >= thresholds[sensor_id - 1])
 
 class KalmanCA:
 
@@ -163,9 +165,10 @@ try:
             if line:
                 # Decode the received bytes back to a string
                 Data = line.decode('utf-8').strip()
-                V1, V2, unit = Data.split(',')
-                V1 = float(V1)
-                V2 = float(V2)
+                V1, V2, V3, unit = Data.split(',')
+                V1 = threshold_reach(1, V1)
+                V2 = threshold_reach(2, V2)
+                V3 = threshold_reach(3, V3)
                 #update Kalman
                 V1_kf, V1_rate, V1_accel = kf1.update(V1)
                 V2_kf, V2_rate, V2_accel = kf2.update(V2)   
@@ -174,10 +177,11 @@ try:
                 Time = (byte*10)/baud_rate + loopTime
                 freqS = 1/Time
                 # print(freqS)
-                print(f"V FSR1:{V1} V FSR2: {V2}")
+                print(f"V FSR1:{V1} V FSR2: {V2} V FSR3: {V3}")
                 row = {
                     f"V_FSR1[{unit}]" : V1,
                     f"V_FSR2[{unit}]" : V2,
+                    f"V_FSR3[{unit}]" : V3,
                     f"V_FSR1_Kalman[{unit}]" : V1_kf,
                     f"V_FSR2_Kalman[{unit}]" : V2_kf
                 }

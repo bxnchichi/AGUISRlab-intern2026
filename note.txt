@@ -73,9 +73,23 @@ Robot now
 
 
 Equipment request list to Mr.Harada:
-- Solder head, lead, flux, unheaded wire
-- mass if exist (50g, 100g , 200g, ...)
+/- Solder head, lead, flux, unheaded wire 
+/- mass if exist (50g, 100g , 200g, ...) -> No need
 - force sensor (ask okada san or yoko san)
-- more male to male wire for more parallel FSR connect
+/- more male to male wire for more parallel FSR connect -> no need
 - normal gloves
 
+
+This week done:
+-> Manus Core 2 used -> still need license
+-> Find the calibate method from research paper
+-> Connect FSR to breadboard: 
+    * 1 -> no problem
+    * 2 or more -> the value go together
+-> establish serial connection to arduino
+-> solder and connect directly with breadboard -> nothing change (cannot fix the value do together)
+-> thershold finding 
+
+Tomorrow
+-> thershold finding
+-> 
