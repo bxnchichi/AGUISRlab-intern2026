@@ -77,5 +77,5 @@ Equipment request list to Mr.Harada:
 - mass if exist (50g, 100g , 200g, ...)
 - force sensor (ask okada san or yoko san)
 - more male to male wire for more parallel FSR connect
-
+- normal gloves
 
