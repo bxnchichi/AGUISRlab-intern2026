@@ -1,0 +1,19 @@
+Function
+
+Processing Sensor1index.csv
+numpy fit log Funtion: y = 1017.8247ln(x) + 688.8060
+sklearn fit log Funtion: y = 1106.6916ln(x) + 777.7585
+Satuation Model Curve fitfunction: y = -1.0000787584966178 + 3902.728860434641 * (1 - e^(-0.17583199786234122 * x))
+Save graph to Data\FSRCalibration\force_magnitude-Volt_FSR1ScatterRegresses\Sensor1index.png
+ 
+Processing Sensor1middle.csv
+numpy fit log Funtion: y = 1058.8738ln(x) + 542.4937
+sklearn fit log Funtion: y = 1144.9110ln(x) + 914.4423
+Satuation Model Curve fitfunction: y = -111.37632787257252 + 3907.3849637392896 * (1 - e^(-0.18717358345831095 * x))
+Save graph to Data\FSRCalibration\force_magnitude-Volt_FSR1ScatterRegresses\Sensor1middle.png
+ 
+Processing Sensor1thump.csv
+numpy fit log Funtion: y = 972.7941ln(x) + 464.6893
+sklearn fit log Funtion: y = 983.9496ln(x) + 717.6123
+Satuation Model Curve fitfunction: y = -122.23626935356464 + 4146.930071972312 * (1 - e^(-0.11265860241068042 * x))
+Save graph to Data\FSRCalibration\force_magnitude-Volt_FSR1ScatterRegresses\Sensor1thump.png
