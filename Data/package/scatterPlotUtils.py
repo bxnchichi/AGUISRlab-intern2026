@@ -8,24 +8,49 @@ from .linePlotUtils import *
 
 R0 = 10000 #Ohm
 Vin = 5000 #mVolt
-
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#    █████████   █████████  █████   █████    ███████████                                                      
+#   ███░░░░░███ ███░░░░░███░░███   ░░███    ░░███░░░░░███                                                     
+#  ███     ░░░ ░███    ░░░  ░███    ░███     ░███    ░███ ████████   ██████   ██████   ██████   █████   █████ 
+# ░███         ░░█████████  ░███    ░███     ░██████████ ░░███░░███ ███░░███ ███░░███ ███░░███ ███░░   ███░░  
+# ░███          ░░░░░░░░███ ░░███   ███      ░███░░░░░░   ░███ ░░░ ░███ ░███░███ ░░░ ░███████ ░░█████ ░░█████ 
+# ░░███     ███ ███    ░███  ░░░█████░       ░███         ░███     ░███ ░███░███  ███░███░░░   ░░░░███ ░░░░███
+#  ░░█████████ ░░█████████     ░░███         █████        █████    ░░██████ ░░██████ ░░██████  ██████  ██████ 
+#   ░░░░░░░░░   ░░░░░░░░░       ░░░         ░░░░░        ░░░░░      ░░░░░░   ░░░░░░   ░░░░░░  ░░░░░░  ░░░░░░  
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 def csvToPanda(filepath):
     return pd.read_csv(filepath)
 
-def VtoOhm(csv_col):
-    return csv_col.apply(lambda x: (R0)*(Vin/x-1))
-
-def AddRColumnCSV(csv):
+def AddRColumnCSVvToOhm(csv):
     df = pd.read_csv(csv)
     df["Ohm_FSR1"] = VtoOhm(df["Volt_FSR1"])
     df["Ohm_FSR2"] = VtoOhm(df["Volt_FSR2"])
     df.to_csv(csv, index = False)
     print(df.columns)
 
-def logRegressCoeffient(df, col1, col2):
+def AddRColumnCSVthershold(csv):
+    df = pd.read_csv(csv)
+    df["V1thers"] = (df["Volt_FSR1"]>250)*df["Volt_FSR1"]
+    df["V2thers"] = (df["Volt_FSR2"]>500)*df["Volt_FSR2"]
+    df.to_csv(csv, index = False)
+    print(df.columns)
 
-    x = df[col1].values
-    y = df[col2].values
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#    █████████            ████                      ████             █████            
+#   ███░░░░░███          ░░███                     ░░███            ░░███             
+#  ███     ░░░   ██████   ░███   ██████  █████ ████ ░███   ██████   ███████    ██████ 
+# ░███          ░░░░░███  ░███  ███░░███░░███ ░███  ░███  ░░░░░███ ░░░███░    ███░░███
+# ░███           ███████  ░███ ░███ ░░░  ░███ ░███  ░███   ███████   ░███    ░███████ 
+# ░░███     ███ ███░░███  ░███ ░███  ███ ░███ ░███  ░███  ███░░███   ░███ ███░███░░░  
+#  ░░█████████ ░░████████ █████░░██████  ░░████████ █████░░████████  ░░█████ ░░██████ 
+#   ░░░░░░░░░   ░░░░░░░░ ░░░░░  ░░░░░░    ░░░░░░░░ ░░░░░  ░░░░░░░░    ░░░░░   ░░░░░░  
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+def VtoOhm(csv_col):
+    return csv_col.apply(lambda x: (R0)*(Vin/x-1))
+
+def logRegressCoeffient(x,y):
 
     # Fit y = a*ln(x) + b
     a, b = np.polyfit(np.log(x), y, 1)
@@ -33,11 +58,7 @@ def logRegressCoeffient(df, col1, col2):
 
     return a, b
 
-def logDLregressCoeffient(df, col1, col2):
-    x = df[col1].values
-    y = df[col2].values
-
-
+def logDLregressCoeffient(x, y):
     # Deep learning model
     X = np.log(x).reshape(-1, 1)
 
@@ -72,6 +93,17 @@ def saturationParam(x, y):
     print(f"Satuation Model Curve fitfunction: y = {c} + {a} * (1 - e^(-{b} * x))")
     return params
 
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#  ███████████  ████            █████   
+# ░░███░░░░░███░░███           ░░███    
+#  ░███    ░███ ░███   ██████  ███████  
+#  ░██████████  ░███  ███░░███░░░███░   
+#  ░███░░░░░░   ░███ ░███ ░███  ░███    
+#  ░███         ░███ ░███ ░███  ░███ ███
+#  █████        █████░░██████   ░░█████ 
+# ░░░░░        ░░░░░  ░░░░░░     ░░░░░  
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 def ScatterPlot(command, csv, col1, col2, outputFold = None):
     # check if the columns exists
     df = csvToPanda(csv)
@@ -87,7 +119,6 @@ def ScatterPlot(command, csv, col1, col2, outputFold = None):
     print(f"{col1} and {col2} exist")
 
     # Plot
-    df = csvToPanda(csv)
     plt.scatter(df[col1], df[col2], s=10)
     plt.title(csv.stem)
     plt.xlabel(col1)
@@ -110,11 +141,10 @@ def ScatterPlotWithLog(command, csv, col1, col2, outputFold = None):
 
 
     # log fit try
-    a, b = logRegressCoeffient(df, col1, col2)
+    a, b = logRegressCoeffient(df[col1], df[col2])
     x_fit = np.linspace(min(df[col1]), max(df[col1]), 500)
     y_fit = a * np.log(x_fit) + b
     # Plot
-    df = csvToPanda(csv)
     plt.scatter(df[col1], df[col2], s=10)
     plt.title(csv.stem)
     plt.xlabel(col1)
@@ -143,7 +173,6 @@ def ScatterPlotSatuationModel(command, csv, col1, col2, outputFold = None):
     x_fit = np.linspace(min(df[col1]), max(df[col1]), 100)
     y_fit = c + a * (1 - np.exp(-b * x_fit))
     # Plot
-    df = csvToPanda(csv)
     plt.scatter(df[col1], df[col2], s=10)
     plt.title(csv.stem)
     plt.xlabel(col1)
@@ -153,7 +182,7 @@ def ScatterPlotSatuationModel(command, csv, col1, col2, outputFold = None):
     plt.ylim(bottom=0)
     visualizePlot(command, output_folder=outputFold, filepath=csv)
 
-def ScatterPlotRegressions(command, csv, col1, col2, outputFold = None):
+def ScatterPlotRegressions(command, csv, col1, col2, outputFold = None, thresholdX = None, thresholdY =None):
         # check if the columns exists
     df = csvToPanda(csv)
     # print("Start Plot")
@@ -166,22 +195,28 @@ def ScatterPlotRegressions(command, csv, col1, col2, outputFold = None):
         print("Existing column name: ", df.columns)
         return
     # print(f"{col1} and {col2} exist")
-
+    if thresholdX is not None:
+        df = df[df[col1] >= thresholdX]
+    
+    if thresholdY is not None:
+        df = df[df[col2] >= thresholdY]
+        print(f"thresholdY={thresholdY}")
+        print(df[col2].dtype)
     # Plot
-    df = csvToPanda(csv)
-    plt.scatter(df[col1], df[col2], s=10, alpha = 0.2)
+
+    plt.scatter(df[col1], df[col2], s=10, alpha = 0.2, c="blue")
     plt.title(csv.stem)
     plt.xlabel(col1)
     plt.ylabel(col2)
 
     # log numpy fit
-    a, b = logRegressCoeffient(df, col1, col2)
+    a, b = logRegressCoeffient(df[col1], df[col2])
     x_fit = np.linspace(min(df[col1]), max(df[col1]), 500)
     y_fit = a * np.log(x_fit) + b
     plt.plot(x_fit, y_fit, 'r', label="numpy Log")
 
     # log sklearn fit
-    a, b = logDLregressCoeffient(df, col1, col2)
+    a, b = logDLregressCoeffient(df[col1].values, df[col2].values)
     x_fit = np.linspace(min(df[col1]), max(df[col1]), 500)
     y_fit = a * np.log(x_fit) + b
     plt.plot(x_fit, y_fit, 'g', label="sklearn Log")
@@ -197,8 +232,20 @@ def ScatterPlotRegressions(command, csv, col1, col2, outputFold = None):
     plt.ylim(bottom=0)
     visualizePlot(command, output_folder=outputFold, filepath=csv)
 
-def ScatterPlotFolder(command, folder, col1, col2, graphcat):
-    outputFolder = f"Data/FSRCalibration/{col1}-{col2}{graphcat}"
+def ScatterPlotWithXY(command, csv, col1, col2, outputFold = None, thresholdX = None, thresholdY =None):
+    df = csvToPanda(csv)
+    
+    
+    plt.scatter(df[col1], df[col2], s=10, alpha = 0.2, c="blue")
+    plt.title(csv.stem)
+    plt.xlabel(col1)
+    plt.ylabel(col2)
+    plt.legend()
+    plt.ylim(bottom=0)
+    visualizePlot(command, output_folder=outputFold, filepath=csv)
+
+def ScatterPlotFolder(command, folder, col1, col2, graphcat, threX = None, threY = None):
+    outputFolder = f"Data/FSRCalibration/{col1}-{col2}{graphcat}_thres({threX}, {threY})"
     if not folder.exists():
         print(f"Folder not found: {folder.resolve()}")
         return
@@ -214,7 +261,7 @@ def ScatterPlotFolder(command, folder, col1, col2, graphcat):
                 case "ScatterSat":
                     ScatterPlotSatuationModel(command, filepath, col1, col2, outputFolder)
                 case "ScatterRegresses":
-                    ScatterPlotRegressions(command, filepath, col1, col2, outputFolder)
+                    ScatterPlotRegressions(command, filepath, col1, col2, outputFolder, thresholdY=threY, thresholdX=threX)
         except Exception as e:
             print(f"Failed: {filepath.name}")
         print(" ")

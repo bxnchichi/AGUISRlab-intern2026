@@ -93,3 +93,7 @@ This week done:
 Tomorrow
 -> thershold finding
 -> 
+
+Meeting's feed   back
+trying to make force static for calibration
+cross talk arduino check
