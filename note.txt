@@ -94,6 +94,16 @@ Tomorrow
 -> thershold finding
 -> 
 
-Meeting's feed   back
+Meeting's feedback
 trying to make force static for calibration
 cross talk arduino check
+
+25/06/2026
+- Solve Crosstalk with 0.1 microF capacitor
+- Recollect Calibrate data
+- Log10 relation try
+- Compare Calculate and measure
+Tomorrow
+- Try polynomial Regression
+- Collect better Vmax from people
+- Mr.Harada consult

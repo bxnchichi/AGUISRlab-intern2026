@@ -6,15 +6,15 @@ sys.path.append(str(project_root))
 from Data.package.linePlotUtils import *
 from Data.package.scatterPlotUtils import *
 
-folder = Path("Data/FSRCalibration/TakenData")
+folder = Path("Data/FSRCalibration/TryStaticData")
 # output_folder = "Data/FSRCalibration/scatterPlot"
-ScatterPlotFolder('save', folder, "force_magnitude", "Volt_FSR2", "ScatterRegresses", threY=250)
+# ScatterPlotFolder('save', folder, "force_magnitude", "CalF2", "ScatterXY")
 # AddRColumnCSV("Data/FSRCalibration/TakenData/Sensor1index.csv")
 
 # for filepath in sorted(folder.glob("*.csv")):
 #     print(f"Processing {filepath.name}")
 #     try:
-#         AddRColumnCSVthershold(filepath)
+#         AddColumnCalculatedForce(filepath)
 #     except Exception as e:
 #         print(f"Failed: {filepath.name}")
 
@@ -22,8 +22,12 @@ ScatterPlotFolder('save', folder, "force_magnitude", "Volt_FSR2", "ScatterRegres
 
 # Satuation Model
 
+ScatterPlotWithXY("save", Path("Data/FSRCalibration/TryStaticData/TryStaticSensor1.csv"), "force_magnitude", "CalF1", outputFold="Data/FSRCalibration/CompareCal-MeasF")
+ScatterPlotWithXY("save", Path("Data/FSRCalibration/TryStaticData/TryStaticSensor2.csv"), "force_magnitude", "CalF2", outputFold="Data/FSRCalibration/CompareCal-MeasF")
 
 
+
+# AddColumnCalculatedForce("Data\FSRCalibration\TryStaticData\TryStaticSensor2.csv")
 
 
 

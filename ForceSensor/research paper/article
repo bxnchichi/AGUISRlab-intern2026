@@ -26,3 +26,5 @@ Himoro: 4154.45
 work left before data collection:
 - wired the sensor for longer distance pressing (2 FSR) -> try calibate first one with 1 connected together, and then calibate two of them and see the difference
 - try connect to leptrino and arduino together
+
+https://learn.adafruit.com/force-sensitive-resistor-fsr/using-an-fsr

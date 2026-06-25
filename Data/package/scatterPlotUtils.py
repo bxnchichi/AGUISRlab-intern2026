@@ -3,11 +3,14 @@ import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression, RANSACRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from scipy.optimize import curve_fit
 from .linePlotUtils import *
 
+
 R0 = 10000 #Ohm
 Vin = 5000 #mVolt
+Vmax = 4100 #mVolt
 # -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #    █████████   █████████  █████   █████    ███████████                                                      
 #   ███░░░░░███ ███░░░░░███░░███   ░░███    ░░███░░░░░███                                                     
@@ -21,19 +24,35 @@ Vin = 5000 #mVolt
 def csvToPanda(filepath):
     return pd.read_csv(filepath)
 
-def AddRColumnCSVvToOhm(csv):
+def AddColumnCSVvToOhm(csv):
     df = pd.read_csv(csv)
     df["Ohm_FSR1"] = VtoOhm(df["Volt_FSR1"])
     df["Ohm_FSR2"] = VtoOhm(df["Volt_FSR2"])
     df.to_csv(csv, index = False)
     print(df.columns)
 
-def AddRColumnCSVthershold(csv):
+def AddColumnCSVthershold(csv):
     df = pd.read_csv(csv)
     df["V1thers"] = (df["Volt_FSR1"]>250)*df["Volt_FSR1"]
     df["V2thers"] = (df["Volt_FSR2"]>500)*df["Volt_FSR2"]
     df.to_csv(csv, index = False)
     print(df.columns)
+
+def AddColumnCalculatedForce(csv):
+    df = pd.read_csv(csv)
+    a = - 1.2677811420919507
+    b = - 0.14258940729211392
+    Vmax = 4100
+    df["CalF1"] = 10**((1/a)*np.log10(Vmax/df["Volt_FSR1"]-1) - (b/a))
+
+    a = -1.4307043411643339
+    b = 0.20129777551613423
+    Vmax = 3700
+    df["CalF2"] = 10**((1/a)*np.log10(Vmax/df["Volt_FSR2"]-1) - (b/a))
+    print(csv)
+    df.to_csv(csv, index = False)
+    print(df.columns)
+
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -90,8 +109,23 @@ def saturationParam(x, y):
         maxfev=10000
     )
     a, b, c = params
-    print(f"Satuation Model Curve fitfunction: y = {c} + {a} * (1 - e^(-{b} * x))")
+    print(f"Satuation Model Curve fit function: y = {c} + {a} * (1 - e^(-{b} * x))")
     return params
+
+def log10Saturation(x, a, b):
+    return Vmax/(10**(a*np.log10(x) + b) + 1)
+
+def log10RegressCoeffient(x, y):
+    params, _ = curve_fit(
+        log10Saturation,
+        x,
+        y
+    )
+    a, b = params
+    print(f"Satuation log 10 Model Curve fit function: log(({Vmax}-y)/y) = {a}log(x) + {b}")
+    return params
+
+
 
 # -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #  ███████████  ████            █████   
@@ -203,7 +237,7 @@ def ScatterPlotRegressions(command, csv, col1, col2, outputFold = None, threshol
         print(f"thresholdY={thresholdY}")
         print(df[col2].dtype)
     # Plot
-
+    
     plt.scatter(df[col1], df[col2], s=10, alpha = 0.2, c="blue")
     plt.title(csv.stem)
     plt.xlabel(col1)
@@ -223,29 +257,120 @@ def ScatterPlotRegressions(command, csv, col1, col2, outputFold = None, threshol
 
     # Satuation Model
     a, b, c = saturationParam(df[col1], df[col2])
-    # print(f"function: y = {c} + {a} * (1 - e^(-{b} * x))")
     x_fit = np.linspace(min(df[col1]), max(df[col1]), 100)
     y_fit = c + a * (1 - np.exp(-b * x_fit))
     plt.plot(x_fit, y_fit, 'y', label="Expo Curve")
 
+    # Log 10 from article Model
+    a, b =log10RegressCoeffient(df[col1], df[col2])
+    x_fit = np.linspace(min(df[col1]), max(df[col1]), 100)
+    y_fit = Vmax/(10**(a*np.log10(x_fit) + b) + 1)
+    plt.plot(x_fit, y_fit, 'm', label=f"log10(Lim = {Vmax})")
+
     plt.legend()
     plt.ylim(bottom=0)
     visualizePlot(command, output_folder=outputFold, filepath=csv)
 
-def ScatterPlotWithXY(command, csv, col1, col2, outputFold = None, thresholdX = None, thresholdY =None):
+# def ScatterPlotWithXY(command, csv, col1, col2, outputFold = None):
+#     df = csvToPanda(csv)
+#     plt.scatter(df[col1], df[col2], s=10, alpha = 0.2, c="blue")
+#     plt.title(csv.stem)
+#     plt.xlabel(col1)
+#     plt.ylabel(col2)
+
+#     # plt x=y
+#     x_fit = np.linspace(min(df[col1]), max(df[col1]), 100)
+#     y_fit = x_fit
+#     plt.plot(x_fit, y_fit, 'm', label="x=y")
+
+#     plt.legend()
+#     plt.ylim(0, 30)
+#     visualizePlot(command, output_folder=outputFold, filepath=csv)
+
+def ScatterPlotWithXY(command, csv, col1, col2, outputFold=None):
+
     df = csvToPanda(csv)
-    
-    
-    plt.scatter(df[col1], df[col2], s=10, alpha = 0.2, c="blue")
+
+    actual = df[col1].values
+    predicted = df[col2].values
+
+    plt.figure(figsize=(8, 6))
+
+    plt.scatter(
+        actual,
+        predicted,
+        s=10,
+        alpha=0.2,
+        c="blue"
+    )
+
     plt.title(csv.stem)
     plt.xlabel(col1)
     plt.ylabel(col2)
+
+    # x = y line
+    min_val = min(actual.min(), predicted.min())
+    max_val = max(actual.max(), predicted.max())
+
+    x_fit = np.linspace(min_val, max_val, 100)
+
+    plt.plot(
+        x_fit,
+        x_fit,
+        'm',
+        linewidth=2,
+        label="x = y"
+    )
+
+    # Metrics
+    mae = mean_absolute_error(actual, predicted)
+
+    rmse = np.sqrt(
+        mean_squared_error(actual, predicted)
+    )
+
+    r2 = r2_score(actual, predicted)
+
+    # Avoid divide-by-zero in MAPE
+    mask = actual != 0
+
+    mape = np.mean(
+        np.abs(
+            (actual[mask] - predicted[mask])
+            / actual[mask]
+        )
+    ) * 100
+
+    metrics_text = (
+        f"MAE  = {mae:.3f}\n"
+        f"RMSE = {rmse:.3f}\n"
+        f"MAPE = {mape:.2f}%\n"
+        f"R²   = {r2:.4f}"
+    )
+
+    plt.text(
+        0.05,
+        0.95,
+        metrics_text,
+        transform=plt.gca().transAxes,
+        verticalalignment='top',
+        bbox=dict(
+            boxstyle='round',
+            facecolor='white',
+            alpha=0.8
+        )
+    )
+
     plt.legend()
-    plt.ylim(bottom=0)
-    visualizePlot(command, output_folder=outputFold, filepath=csv)
+
+    visualizePlot(
+        command,
+        output_folder=outputFold,
+        filepath=csv
+    )
 
 def ScatterPlotFolder(command, folder, col1, col2, graphcat, threX = None, threY = None):
-    outputFolder = f"Data/FSRCalibration/{col1}-{col2}{graphcat}_thres({threX}, {threY})"
+    outputFolder = f"Data/FSRCalibration/{col1}-{col2}{graphcat}"
     if not folder.exists():
         print(f"Folder not found: {folder.resolve()}")
         return
@@ -261,7 +386,10 @@ def ScatterPlotFolder(command, folder, col1, col2, graphcat, threX = None, threY
                 case "ScatterSat":
                     ScatterPlotSatuationModel(command, filepath, col1, col2, outputFolder)
                 case "ScatterRegresses":
+                    outputFolder = f"Data/FSRCalibration/{col1}-{col2}{graphcat}_thres({threX}, {threY})"
                     ScatterPlotRegressions(command, filepath, col1, col2, outputFolder, thresholdY=threY, thresholdX=threX)
+                case "ScatterXY":
+                    ScatterPlotWithXY(command, filepath, col1, col2, outputFolder)
         except Exception as e:
             print(f"Failed: {filepath.name}")
         print(" ")
