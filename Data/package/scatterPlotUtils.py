@@ -10,7 +10,7 @@ from .linePlotUtils import *
 
 R0 = 10000 #Ohm
 Vin = 5000 #mVolt
-Vmax = 4100 #mVolt
+Vmax = 3700 #mVolt
 # -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #    █████████   █████████  █████   █████    ███████████                                                      
 #   ███░░░░░███ ███░░░░░███░░███   ░░███    ░░███░░░░░███                                                     
@@ -112,20 +112,31 @@ def saturationParam(x, y):
     print(f"Satuation Model Curve fit function: y = {c} + {a} * (1 - e^(-{b} * x))")
     return params
 
-def log10Saturation(x, a, b):
-    return Vmax/(10**(a*np.log10(x) + b) + 1)
+def log10Saturation(f, a, b):
+    return Vmax/(10**(a*np.log10(f) + b) + 1)
 
-def log10RegressCoeffient(x, y):
+def log10RegressCoeffient(f, v):
     params, _ = curve_fit(
         log10Saturation,
-        x,
-        y
+        f,
+        v
     )
     a, b = params
     print(f"Satuation log 10 Model Curve fit function: log(({Vmax}-y)/y) = {a}log(x) + {b}")
     return params
 
+def polynomialSaturation(v, a, b, c, d):
+    return a*v**3 + b*v**2 + c*v + d
 
+def polynomialRegressCoefficient(f, v):
+    param, _ = curve_fit(
+        polynomialSaturation,
+        v,
+        f
+    )
+    a, b, c, d = param
+    print(f"Polynomial curve fit function: F = {a}v**3 + {b}v**2 + {c}v + {d}")
+    return param
 
 # -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #  ███████████  ████            █████   
@@ -267,43 +278,24 @@ def ScatterPlotRegressions(command, csv, col1, col2, outputFold = None, threshol
     y_fit = Vmax/(10**(a*np.log10(x_fit) + b) + 1)
     plt.plot(x_fit, y_fit, 'm', label=f"log10(Lim = {Vmax})")
 
+    # polynomial from research paper
+    a, b, c, d = polynomialRegressCoefficient(df[col1], df[col2])
+    y_fit = np.linspace(min(df[col2]), max(df[col2]), 100)
+    x_fit = a*y_fit**3 + b*y_fit**2 + c*y_fit + d
+    plt.plot(x_fit, y_fit, 'c', label ="polynomial Curve")
+
     plt.legend()
     plt.ylim(bottom=0)
     visualizePlot(command, output_folder=outputFold, filepath=csv)
 
-# def ScatterPlotWithXY(command, csv, col1, col2, outputFold = None):
-#     df = csvToPanda(csv)
-#     plt.scatter(df[col1], df[col2], s=10, alpha = 0.2, c="blue")
-#     plt.title(csv.stem)
-#     plt.xlabel(col1)
-#     plt.ylabel(col2)
-
-#     # plt x=y
-#     x_fit = np.linspace(min(df[col1]), max(df[col1]), 100)
-#     y_fit = x_fit
-#     plt.plot(x_fit, y_fit, 'm', label="x=y")
-
-#     plt.legend()
-#     plt.ylim(0, 30)
-#     visualizePlot(command, output_folder=outputFold, filepath=csv)
-
 def ScatterPlotWithXY(command, csv, col1, col2, outputFold=None):
-
     df = csvToPanda(csv)
 
     actual = df[col1].values
     predicted = df[col2].values
 
     plt.figure(figsize=(8, 6))
-
-    plt.scatter(
-        actual,
-        predicted,
-        s=10,
-        alpha=0.2,
-        c="blue"
-    )
-
+    plt.scatter(actual, predicted, s=10, alpha=0.2, c="blue")
     plt.title(csv.stem)
     plt.xlabel(col1)
     plt.ylabel(col2)
@@ -313,21 +305,12 @@ def ScatterPlotWithXY(command, csv, col1, col2, outputFold=None):
     max_val = max(actual.max(), predicted.max())
 
     x_fit = np.linspace(min_val, max_val, 100)
-
-    plt.plot(
-        x_fit,
-        x_fit,
-        'm',
-        linewidth=2,
-        label="x = y"
-    )
+    plt.plot(x_fit, x_fit, 'm', linewidth=2, label="x = y")
 
     # Metrics
     mae = mean_absolute_error(actual, predicted)
 
-    rmse = np.sqrt(
-        mean_squared_error(actual, predicted)
-    )
+    rmse = np.sqrt(mean_squared_error(actual, predicted))
 
     r2 = r2_score(actual, predicted)
 
@@ -348,9 +331,9 @@ def ScatterPlotWithXY(command, csv, col1, col2, outputFold=None):
         f"R²   = {r2:.4f}"
     )
 
-    plt.text(
-        0.05,
-        0.95,
+    print(metrics_text)
+
+    plt.text(0.05, 0.95,
         metrics_text,
         transform=plt.gca().transAxes,
         verticalalignment='top',
@@ -360,14 +343,8 @@ def ScatterPlotWithXY(command, csv, col1, col2, outputFold=None):
             alpha=0.8
         )
     )
-
     plt.legend()
-
-    visualizePlot(
-        command,
-        output_folder=outputFold,
-        filepath=csv
-    )
+    visualizePlot(command, output_folder=outputFold, filepath=csv)
 
 def ScatterPlotFolder(command, folder, col1, col2, graphcat, threX = None, threY = None):
     outputFolder = f"Data/FSRCalibration/{col1}-{col2}{graphcat}"
@@ -386,10 +363,12 @@ def ScatterPlotFolder(command, folder, col1, col2, graphcat, threX = None, threY
                 case "ScatterSat":
                     ScatterPlotSatuationModel(command, filepath, col1, col2, outputFolder)
                 case "ScatterRegresses":
-                    outputFolder = f"Data/FSRCalibration/{col1}-{col2}{graphcat}_thres({threX}, {threY})"
+                    # outputFolder = f"Data/FSRCalibration/{col1}-{col2}{graphcat}_thres({threX}, {threY})"
                     ScatterPlotRegressions(command, filepath, col1, col2, outputFolder, thresholdY=threY, thresholdX=threX)
                 case "ScatterXY":
                     ScatterPlotWithXY(command, filepath, col1, col2, outputFolder)
+                case _:
+                    print("No action match command")
         except Exception as e:
             print(f"Failed: {filepath.name}")
         print(" ")

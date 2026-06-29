@@ -104,6 +104,7 @@ cross talk arduino check
 - Log10 relation try
 - Compare Calculate and measure
 Tomorrow
-- Try polynomial Regression
-- Collect better Vmax from people
+/- Try polynomial Regression -> not good
+/- Collect better Vmax from people -> Vmax of pinching is not equal to Vmax pressing
 - Mr.Harada consult
+    -> result of the regression consult ask about 

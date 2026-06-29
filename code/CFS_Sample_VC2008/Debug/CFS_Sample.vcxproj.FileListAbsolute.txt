@@ -1,0 +1,5 @@
+C:\Users\cacao\OneDrive - Aoyama Gakuin\実験\M2計測実験\Leptrinoプログラム\6軸力覚センサ\サンプルプログラム\Windows\CFS_Sample_VC2008\Debug\CFS_Sample.exe
+C:\Users\cacao\OneDrive - Aoyama Gakuin\実験\M2計測実験\CFS_Sample_VC2008\Debug\CFS_Sample.exe
+C:\okada\計測実験\CFS_Sample_VC2008\Debug\CFS_Sample.exe
+C:\okada\計測実験\CFS_Sample_VC2008\Debug\CFS_Sample.pdb
+D:\bxn_lu\recovered\3rdyear\internship\intern\code\CFS_Sample_VC2008\Debug\CFS_Sample.exe

@@ -8,7 +8,7 @@ from Data.package.scatterPlotUtils import *
 
 folder = Path("Data/FSRCalibration/TryStaticData")
 # output_folder = "Data/FSRCalibration/scatterPlot"
-# ScatterPlotFolder('save', folder, "force_magnitude", "CalF2", "ScatterXY")
+ScatterPlotFolder('save', folder, "force_magnitude", "Volt_FSR1", "ScatterRegresses")
 # AddRColumnCSV("Data/FSRCalibration/TakenData/Sensor1index.csv")
 
 # for filepath in sorted(folder.glob("*.csv")):
@@ -22,8 +22,8 @@ folder = Path("Data/FSRCalibration/TryStaticData")
 
 # Satuation Model
 
-ScatterPlotWithXY("save", Path("Data/FSRCalibration/TryStaticData/TryStaticSensor1.csv"), "force_magnitude", "CalF1", outputFold="Data/FSRCalibration/CompareCal-MeasF")
-ScatterPlotWithXY("save", Path("Data/FSRCalibration/TryStaticData/TryStaticSensor2.csv"), "force_magnitude", "CalF2", outputFold="Data/FSRCalibration/CompareCal-MeasF")
+# ScatterPlotWithXY("save", Path("Data/FSRCalibration/TryStaticData/TryStaticSensor1.csv"), "force_magnitude", "CalF1", outputFold="Data/FSRCalibration/CompareCal-MeasF")
+# ScatterPlotWithXY("save", Path("Data/FSRCalibration/TryStaticData/TryStaticSensor2.csv"), "force_magnitude", "CalF2", outputFold="Data/FSRCalibration/CompareCal-MeasF")
 
 
 

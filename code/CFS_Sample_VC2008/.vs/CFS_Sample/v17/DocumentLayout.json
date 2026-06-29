@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\okada\\\u8A08\u6E2C\u5B9F\u9A13\\CFS_Sample_VC2008\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A21FB431-B0B0-4330-B958-4303CB9330C7}|CFS_Sample.vcxproj|C:\\okada\\\u8A08\u6E2C\u5B9F\u9A13\\CFS_Sample_VC2008\\CFS_Sample.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A21FB431-B0B0-4330-B958-4303CB9330C7}|CFS_Sample.vcxproj|solutionrelative:CFS_Sample.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CFS_Sample.cpp",
+              "DocumentMoniker": "C:\\okada\\\u8A08\u6E2C\u5B9F\u9A13\\CFS_Sample_VC2008\\CFS_Sample.cpp",
+              "RelativeDocumentMoniker": "CFS_Sample.cpp",
+              "ToolTip": "C:\\okada\\\u8A08\u6E2C\u5B9F\u9A13\\CFS_Sample_VC2008\\CFS_Sample.cpp*",
+              "RelativeToolTip": "CFS_Sample.cpp*",
+              "ViewState": "AgIAAJIAAAAAAAAAAAAqwKQAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-16T04:39:45.315Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
