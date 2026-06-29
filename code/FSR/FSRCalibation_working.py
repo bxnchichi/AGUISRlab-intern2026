@@ -79,7 +79,7 @@ try:
             if line == prevLine:
                 continue
             if line:
-                V1, V2, V3, unit = line.split(',')
+                V1, V2, V3, V4, V5, V6, unit = line.split(',')
             else:
                 continue
 
@@ -105,10 +105,15 @@ try:
                 # FSR glove
                 V1 = float(V1)
                 V2 = float(V2)
+                V3 = float(V3)
+                V4 = float(V4)
+                V5 = float(V5)
+                V6 = float(V6)
+
                 
                 print('\rtime', '{:5.2f}'.format(current_time - start_time), '[s]',
-                'Force: Fx={:5.2f}, Fy={:5.2f}, Fz={:5.2f}'.format(latest_data[1], latest_data[2], latest_data[3]),
-                'FSR Voltage[mV]: V1={:5.2f}, V2={:5.2f}'.format(V1, V2),
+                'Force: Fx={:5.2f}, Fy={:5.2f}, Fz={:5.2f}, FMagn = {:5.2f}'.format(latest_data[1], latest_data[2], latest_data[3], force_magnitude),
+                'FSR Voltage[mV]: V_SidePalm={:5.2f}, V_ThumpPalm={:5.2f}, V_UpperPalm={:5.2f}, V_Middle={:5.2f}, V_Index={:5.2f}, V_Thump={:5.2f}'.format(V1, V2, V3, V4, V5, V6),
                 end='')
 
                 # Combine Data
@@ -128,8 +133,12 @@ try:
                     "Mz": latest_data[6],
                     "force_magnitude": force_magnitude,
                     "touch_count": touch,
-                    "Volt_FSR1": V1,
-                    "Volt_FSR2": V2,
+                    f"V_SidePalm[{unit}]" : V1, # red wire
+                    f"V_ThumpPalm[{unit}]" : V2, # yellow wire
+                    f"V_UpperPalm[{unit}]" : V3, # green wire
+                    f"V_Middle[{unit}]" : V4, # blue wire
+                    f"V_Index[{unit}]" : V5, # blue wire with male jumper head
+                    f"V_Thump[{unit}]" : V6, # black wire
                 }
                 collected_data.append(row)  # 格納用リストに追加
 
@@ -148,6 +157,6 @@ finally:
 
 # CSVファイルに保存
 df = pd.DataFrame(collected_data)
-filename = "thumpSensor1.csv"
+filename = "TryStaticSensor6.csv"
 df.to_csv(filename, index=False)
 print(f"Data saved to {filename}")

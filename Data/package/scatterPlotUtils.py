@@ -10,7 +10,7 @@ from .linePlotUtils import *
 
 R0 = 10000 #Ohm
 Vin = 5000 #mVolt
-Vmax = 3700 #mVolt
+Vmax = 3975 #mVolt
 # -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #    █████████   █████████  █████   █████    ███████████                                                      
 #   ███░░░░░███ ███░░░░░███░░███   ░░███    ░░███░░░░░███                                                     
@@ -40,16 +40,27 @@ def AddColumnCSVthershold(csv):
 
 def AddColumnCalculatedForce(csv):
     df = pd.read_csv(csv)
-    a = - 1.2677811420919507
-    b = - 0.14258940729211392
-    Vmax = 4100
-    df["CalF1"] = 10**((1/a)*np.log10(Vmax/df["Volt_FSR1"]-1) - (b/a))
+    a_list = [-1.8684900407456901, -1.5018952034141286, -1.532802504141568, -1.48845301662107, -1.6561705682937151, -1.6172681722599143]
+    b_list = [1.8109451960039133, 1.049141353016365, 0.7290741468149682, 0.24284892971658428, 0.21215958253610973, 0.7128206215795522]
+    Vmax_list = [4700, 4400, 4700, 3800, 3900, 3975] # ceil(max/100)*100
+    # a_list[4] = - 1.2677811420919507
+    # b_list[4] = - 0.14258940729211392
+    # Vmax_list[4] = 4100
+    # df["CalF1"] = 10**((1/a)*np.log10(Vmax/df["Volt_FSR1"]-1) - (b/a))
 
-    a = -1.4307043411643339
-    b = 0.20129777551613423
-    Vmax = 3700
-    df["CalF2"] = 10**((1/a)*np.log10(Vmax/df["Volt_FSR2"]-1) - (b/a))
-    print(csv)
+    # a = -1.4307043411643339
+    # b = 0.20129777551613423
+    # Vmax = 3700
+    # df["CalF2"] = 10**((1/a)*np.log10(Vmax/df["Volt_FSR2"]-1) - (b/a))
+    # print(csv)
+    for i in range(6):
+        a = a_list[i]
+        b = b_list[i]
+        Vmax = Vmax_list[i]
+        VoltList = ['SidePalm', 'ThumpPalm', 'UpperPalm', 'Middle', 'Index', 'Thump']
+        col = f'V_{VoltList[i]}[mV]'
+        df[f"CalF{i+1}"] = 10**((1/a)*np.log10(Vmax/df[col]-1) - (b/a))
+        print(f"CalF{i+1} = 10**((1/{a})*np.log10({Vmax}/V_{VoltList[i]}-1) - ({b}/{a}))")
     df.to_csv(csv, index = False)
     print(df.columns)
 
@@ -343,6 +354,8 @@ def ScatterPlotWithXY(command, csv, col1, col2, outputFold=None):
             alpha=0.8
         )
     )
+    # plt.ylim(0, 75)
+    # plt.xlim(0, 75)
     plt.legend()
     visualizePlot(command, output_folder=outputFold, filepath=csv)
 

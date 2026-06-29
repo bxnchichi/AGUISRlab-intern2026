@@ -1,13 +1,18 @@
 
-numpy fit log Funtion: y = 785.1059ln(x) + 2305.8213
-sklearn fit log Funtion: y = 400.2485ln(x) + 3035.7414
-Satuation Model Curve fit function: y = -212.4887138390726 + 4068.367364753579 * (1 - e^(-0.9166819421157367 * x))
-Satuation log 10 Model Curve fit function: log((4100-y)/y) = -1.2677811420919507log(x) + -0.14258940729211392
-Save graph to Data\FSRCalibration\force_magnitude-Volt_FSR1ScatterRegresses_thres(None, None)\TryStaticSensor1.png
- 
-Processing TryStaticSensor2.csv
-numpy fit log Funtion: y = 757.5165ln(x) + 1771.8022
-sklearn fit log Funtion: y = 392.0205ln(x) + 2563.1755
-Satuation Model Curve fit function: y = -221.3798265426564 + 3699.11830853026 * (1 - e^(-0.571598498536526 * x))
-Satuation log 10 Model Curve fit function: log((3700-y)/y) = -1.4307043411643339log(x) + 0.20129777551613423
-Save graph to Data\FSRCalibration\force_magnitude-Volt_FSR2ScatterRegresses_thres(None, None)\TryStaticSensor2.png
+Sensor1 (Side Palm)
+log((4700-V)/V) = -1.8684900407456901log(F) + 1.8109451960039133
+
+Sensor2 (Thump Palm)
+log((4400-V)/V) = -1.5018952034141286log(F) + 1.049141353016365
+
+Sensor3 (Upper Palm)
+log((4700-V)/V) = -1.532802504141568log(F) + 0.7290741468149682
+
+Sensor4 (Middle Finger)
+log((3800-V)/V) = -1.48845301662107log(F) + 0.24284892971658428
+
+Sensor5 (Index Finger)
+log((3900-V)/V) = -1.6561705682937151log(F) + 0.21215958253610973
+
+Sensor6 (Thump)
+log((4000-V)/V) = -1.6172681722599143log(F) + 0.7128206215795522
