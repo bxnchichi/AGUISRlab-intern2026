@@ -180,7 +180,7 @@ int _tmain(int argc, _TCHAR* argv[])
 					}
 				}
 
-				// ���ϒl���v�Z���āC�o�C�A�X���擾l
+				// ���ϒl���v�Z���āC�o�C�A�X���擾
 				Fx0 /= calibration_count;
 				Fy0 /= calibration_count;
 				Fz0 /= calibration_count;
