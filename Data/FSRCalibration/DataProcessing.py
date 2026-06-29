@@ -6,7 +6,7 @@ sys.path.append(str(project_root))
 from Data.package.linePlotUtils import *
 from Data.package.scatterPlotUtils import *
 
-folder = Path("Data/FSRCalibration/TryStaticData")
+folder = Path("Data/FSRCalibration/TryStaticData2")
 # output_folder = "Data/FSRCalibration/scatterPlot"
 ScatterPlotFolder('save', folder, "force_magnitude", "Volt_FSR1", "ScatterRegresses")
 # AddRColumnCSV("Data/FSRCalibration/TakenData/Sensor1index.csv")
@@ -24,7 +24,9 @@ ScatterPlotFolder('save', folder, "force_magnitude", "Volt_FSR1", "ScatterRegres
 
 # ScatterPlotWithXY("save", Path("Data/FSRCalibration/TryStaticData/TryStaticSensor1.csv"), "force_magnitude", "CalF1", outputFold="Data/FSRCalibration/CompareCal-MeasF")
 # ScatterPlotWithXY("save", Path("Data/FSRCalibration/TryStaticData/TryStaticSensor2.csv"), "force_magnitude", "CalF2", outputFold="Data/FSRCalibration/CompareCal-MeasF")
-
+filepath = Path("")
+outputFolder = Path("Data/FSRCalibration/F-Vregress2")
+ScatterPlotRegressions('save', filepath, col1, col2, outputFolder, thresholdY=threY, thresholdX=threX)
 
 
 # AddColumnCalculatedForce("Data\FSRCalibration\TryStaticData\TryStaticSensor2.csv")
