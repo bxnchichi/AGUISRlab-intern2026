@@ -106,5 +106,14 @@ cross talk arduino check
 Tomorrow
 /- Try polynomial Regression -> not good
 /- Collect better Vmax from people -> Vmax of pinching is not equal to Vmax pressing
-- Mr.Harada consult
-    -> result of the regression consult ask about 
+
+
+29/06/2026
+- data collection for 6 FSR
+- regression and analysis -> start diverting after 20N
+                          -> larger surface area make result worse
+
+Tomorrow
+-> analyse Thai massage for the open day work
+-> about it with ito-san and Daichi
+-> Try test info and consult Harada-san
