@@ -10,7 +10,7 @@ from .linePlotUtils import *
 
 R0 = 10000 #Ohm
 Vin = 5000 #mVolt
-Vmax = 3975 #mVolt
+Vmax = 5000 #mVolt
 # -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #    █████████   █████████  █████   █████    ███████████                                                      
 #   ███░░░░░███ ███░░░░░███░░███   ░░███    ░░███░░░░░███                                                     
@@ -23,6 +23,13 @@ Vmax = 3975 #mVolt
 # -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 def csvToPanda(filepath):
     return pd.read_csv(filepath)
+
+def addAverageForceColumn(csv, col1, col2):
+    df = pd.read_csv(csv)
+    df['AvgForce'] = (df[col1] + df[col2])/2
+    df.to_csv(csv, index = False)
+    print(df.columns)
+
 
 def AddColumnCSVvToOhm(csv):
     df = pd.read_csv(csv)
@@ -65,6 +72,64 @@ def AddColumnCalculatedForce(csv):
     print(df.columns)
 
 
+def average_voltage_per_newton(csv, force_col="Force", voltage_col="Voltage", bin_size=1.0, print_result=True, output_csv=None):
+
+    df = csvToPanda(csv)
+
+    min_force = np.floor(df[force_col].min())
+    max_force = np.ceil(df[force_col].max())
+
+    results = []
+    summary = []
+
+    for start in np.arange(min_force, max_force, bin_size):
+        end = start + bin_size
+
+        mask = (df[force_col] >= start) & (df[force_col] < end)
+        subset = df.loc[mask]
+
+        if subset.empty:
+            continue
+
+        avg_voltage = subset[voltage_col].mean()
+
+        result = {
+            "force_min": start,
+            "force_max": end,
+            "average_voltage": avg_voltage,
+            "sample_count": len(subset),
+            "voltage_samples": subset[voltage_col].to_numpy(),
+            "force_samples": subset[force_col].to_numpy(),
+        }
+
+        results.append(result)
+
+        # Information to save in CSV
+        if len(subset) > 10:
+            summary.append({
+                "Force Min (N)": start,
+                "Force Max (N)": end,
+                "Average Voltage (V)": avg_voltage,
+                "Sample Count": len(subset)
+            })
+
+        if print_result:
+            print(
+                f"{start:.1f}-{end:.1f} N | "
+                f"Average Voltage = {avg_voltage:.4f} V | "
+                f"Samples = {len(subset)}"
+            )
+
+    # Save CSV if requested
+    if output_csv is not None:
+        summary_df = pd.DataFrame(summary)
+        summary_df.to_csv(output_csv, index=False)
+        print("Damn")
+        print(f"Results saved to: {output_csv}")
+
+    return results
+
+
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #    █████████            ████                      ████             █████            
@@ -80,11 +145,13 @@ def AddColumnCalculatedForce(csv):
 def VtoOhm(csv_col):
     return csv_col.apply(lambda x: (R0)*(Vin/x-1))
 
-def logRegressCoeffient(x,y):
+def logRegressCoeffient(F,V):
 
     # Fit y = a*ln(x) + b
-    a, b = np.polyfit(np.log(x), y, 1)
-    print(f"numpy fit log Funtion: y = {a:.4f}ln(x) + {b:.4f}")
+    log_F = np.log10(F)
+    log_Ratio = np.log10((Vin - V)/V)
+    a, b = np.polyfit(log_F, log_Ratio, 1)
+    print(f"numpy fit log Funtion: log(F) = {a:.4f}log((V/Vin)-1) + {b:.4f}")
 
     return a, b
 
@@ -175,6 +242,7 @@ def ScatterPlot(command, csv, col1, col2, outputFold = None):
     print(f"{col1} and {col2} exist")
 
     # Plot
+
     plt.scatter(df[col1], df[col2], s=10)
     plt.title(csv.stem)
     plt.xlabel(col1)
@@ -268,7 +336,7 @@ def ScatterPlotRegressions(command, csv, col1, col2, outputFold = None, threshol
     # log numpy fit
     a, b = logRegressCoeffient(df[col1], df[col2])
     x_fit = np.linspace(min(df[col1]), max(df[col1]), 500)
-    y_fit = a * np.log(x_fit) + b
+    y_fit = 10**(a * np.log(x_fit) + b)
     plt.plot(x_fit, y_fit, 'r', label="numpy Log")
 
     # log sklearn fit
@@ -354,12 +422,12 @@ def ScatterPlotWithXY(command, csv, col1, col2, outputFold=None):
             alpha=0.8
         )
     )
-    # plt.ylim(0, 75)
-    # plt.xlim(0, 75)
+    plt.ylim(0, 20)
+    plt.xlim(0, 20)
     plt.legend()
     visualizePlot(command, output_folder=outputFold, filepath=csv)
 
-def ScatterPlotFolder(command, folder, col1, col2, graphcat, threX = None, threY = None):
+def ScatterPlotFolder(command, folder, col1, col2, graphcat, alphaCol = None, threX = None, threY = None):
     outputFolder = f"Data/FSRCalibration/{col1}-{col2}{graphcat}"
     if not folder.exists():
         print(f"Folder not found: {folder.resolve()}")

@@ -6,9 +6,9 @@ sys.path.append(str(project_root))
 from Data.package.linePlotUtils import *
 from Data.package.scatterPlotUtils import *
 
-folder = Path("Data/FSRCalibration/TryStaticData2")
-# output_folder = "Data/FSRCalibration/scatterPlot"
-# ScatterPlotFolder('save', folder, "force_magnitude", "Volt_FSR1", "ScatterRegresses")
+folder = Path("Data/FSRCalibration/AverageVoltageInRange1N")
+output_folder = "Data/FSRCalibration/F-VscatterAvg"
+# ScatterPlotFolder('save', folder, "AvgForce", "Average Voltage (V)", "ScatterRegresses")
 # AddRColumnCSV("Data/FSRCalibration/TakenData/Sensor1index.csv")
 
 # for filepath in sorted(folder.glob("*.csv")):
@@ -22,35 +22,51 @@ folder = Path("Data/FSRCalibration/TryStaticData2")
 
 # Satuation Model
 
-# ScatterPlotWithXY("save", Path("Data/FSRCalibration/TryStaticData/TryStaticSensor1.csv"), "force_magnitude", "CalF1", outputFold="Data/FSRCalibration/CompareCal-MeasF")
+# ScatterPlotWith  XY("save", Path("Data/FSRCalibration/TryStaticData/TryStaticSensor1.csv"), "force_magnitude", "CalF1", outputFold="Data/FSRCalibration/CompareCal-MeasF")
 # ScatterPlotWithXY("save", Path("Data/FSRCalibration/TryStaticData/TryStaticSensor2.csv"), "force_magnitude", "CalF2", outputFold="Data/FSRCalibration/CompareCal-MeasF")
 # senNo = 6
-# filepath = Path(f"Data/FSRCalibration/TryStaticData2/TryStaticSensor{senNo}.csv")
+# filepath = Path(f"Data/FSRCalibration/AverageVoltageInRange1N/{senNo}.csv")
 # outputFolder = Path("Data/FSRCalibration/F-Vregress2")
-# col1 = "force_magnitude" 
+# col1 = "Avg_force" 
 # VoltList = ['SidePalm', 'ThumpPalm', 'UpperPalm', 'Middle', 'Index', 'Thump']
 # col2 = f"V_{VoltList[senNo-1]}[mV]"
 # ScatterPlotRegressions('save', filepath, col1, col2, outputFolder)
 
-# for i in range(6):
-#     print(f"Processing sensor {i+1} file")
-#     senNo = i + 1
-#     filepath = Path(f"Data/FSRCalibration/TryStaticData2/TryStaticSensor{senNo}.csv")
-#     outputFolder = Path("Data/FSRCalibration/CompareCal-MeasF2")
-#     col1 = "force_magnitude" 
-#     VoltList = ['SidePalm', 'ThumpPalm', 'UpperPalm', 'Middle', 'Index', 'Thump']
-#     col2 = f"CalF{senNo}"
-#     ScatterPlotWithXY("save", filepath, col1, col2, outputFold=outputFolder)
+for i in range(6):
+    try:
+        print(f"Processing sensor {i+1} file")
+        senNo = i + 1
+        filepath = Path(f"Data/FSRCalibration/TryStaticData2/TryStaticSensor{senNo}.csv")
+        # filepath = Path(f"Data/FSRCalibration/TestInfo/{senNo}testInfo.csv")
+        
+        # # Add Calculated Force Column
+        # AddColumnCalculatedForce(filepath)
+        
+        outputFolder = Path("Data/FSRCalibration/F-Vregress2")
+        # outputFolder.mkdir(parents=True, exist_ok=True)
+        # outputCSV = Path(f"Data/FSRCalibration/AverageVoltageInRange1N/{senNo}.csv")
+        col1 = "force_magnitude" 
+        VoltList = ['SidePalm', 'ThumpPalm', 'UpperPalm', 'Middle', 'Index', 'Thump']
+        # col2 = f"CalF{senNo}"
+        col2 = f"V_{VoltList[i]}[mV]"
+        ScatterPlotRegressions('save', filepath, col1, col2, outputFolder)
+        # average_voltage_per_newton(filepath, col1, col2, output_csv=outputCSV)
+        # ScatterPlotWithXY("save", filepath, col1, col2, outputFold=outputFolder)
+    except Exception as e:
+        print(f"Failed: {filepath.name}")
+        print(e)
+    print(" ")
 
-senNo = 5
-filepath = Path(f"Data/FSRCalibration/TryStaticData2/TryStaticSensor{senNo}.csv")
-AddColumnCalculatedForce(filepath)
-filepath = Path(f"Data/FSRCalibration/TryStaticData2/TryStaticSensor{senNo}.csv")
-outputFolder = Path("Data/FSRCalibration/CompareCal-MeasF2")
-col1 = "force_magnitude" 
-VoltList = ['SidePalm', 'ThumpPalm', 'UpperPalm', 'Middle', 'Index', 'Thump']
-col2 = f"CalF{senNo}"
-ScatterPlotWithXY("save", filepath, col1, col2, outputFold=outputFolder)
+
+# senNo = 5
+# filepath = Path(f"Data/FSRCalibration/TryStaticData2/TryStaticSensor{senNo}.csv")
+# AddColumnCalculatedForce(filepath)
+# filepath = Path(f"Data/FSRCalibration/TryStaticData2/TryStaticSensor{senNo}.csv")
+# outputFolder = Path("Data/FSRCalibration/CompareCal-MeasF2")
+# col1 = "force_magnitude" 
+# VoltList = ['SidePalm', 'ThumpPalm', 'UpperPalm', 'Middle', 'Index', 'Thump']
+# col2 = f"CalF{senNo}"
+# ScatterPlotWithXY("save", filepath, col1, col2, outputFold=outputFolder)
 
 # AddColumnCalculatedForce("Data\FSRCalibration\TryStaticData\TryStaticSensor2.csv")
 
@@ -58,7 +74,9 @@ ScatterPlotWithXY("save", filepath, col1, col2, outputFold=outputFolder)
 #     print(i)
 
 
-
+# for i in range(6):
+#     csv = Path(f'Data/FSRCalibration/AverageVoltageInRange1N/{i+1}.csv')
+#     addAverageForceColumn(csv, 'Force Min (N)', 'Force Max (N)')
 
 
 
