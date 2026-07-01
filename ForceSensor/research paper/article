@@ -21,7 +21,10 @@ calibate static load to
 
 
 finger max ->
-Himoro: 4154.45
+Himoro: 4154.45 (400)
+Shoma: 4100 4600
+
+
 
 work left before data collection:
 - wired the sensor for longer distance pressing (2 FSR) -> try calibate first one with 1 connected together, and then calibate two of them and see the difference

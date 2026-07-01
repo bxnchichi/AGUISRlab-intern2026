@@ -10,7 +10,7 @@ from .linePlotUtils import *
 
 R0 = 10000 #Ohm
 Vin = 5000 #mVolt
-Vmax = 5000 #mVolt
+Vmax = 3975 #mVolt
 # -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #    █████████   █████████  █████   █████    ███████████                                                      
 #   ███░░░░░███ ███░░░░░███░░███   ░░███    ░░███░░░░░███                                                     
@@ -148,9 +148,9 @@ def VtoOhm(csv_col):
 def logRegressCoeffient(F,V):
 
     # Fit y = a*ln(x) + b
-    log_F = np.log10(F)
-    log_Ratio = np.log10((Vin - V)/V)
-    a, b = np.polyfit(log_F, log_Ratio, 1)
+    # log_F = np.log10(F)
+    # log_Ratio = np.log10((Vin - V)/V)
+    a, b = np.polyfit(np.log(F), V, 1)
     print(f"numpy fit log Funtion: log(F) = {a:.4f}log((V/Vin)-1) + {b:.4f}")
 
     return a, b
@@ -336,7 +336,7 @@ def ScatterPlotRegressions(command, csv, col1, col2, outputFold = None, threshol
     # log numpy fit
     a, b = logRegressCoeffient(df[col1], df[col2])
     x_fit = np.linspace(min(df[col1]), max(df[col1]), 500)
-    y_fit = 10**(a * np.log(x_fit) + b)
+    y_fit = a * np.log(x_fit) + b
     plt.plot(x_fit, y_fit, 'r', label="numpy Log")
 
     # log sklearn fit
