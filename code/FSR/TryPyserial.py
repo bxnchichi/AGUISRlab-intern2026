@@ -39,19 +39,28 @@ try:
                 # Decode the received bytes back to a string
                 Data = line.decode('utf-8').strip()
                 V1, V2, V3, V4, V5, V6, unit = Data.split(',')
+                V1 = float(V1)
+                V2 = float(V2)
+                V3 = float(V3)
+                V4 = float(V4)
+                V5 = float(V5)
+                V6 = float(V6)
                 # calculate Sampling Frequency
                 byte = len(Data) + 2
                 Time = (byte*10)/baud_rate + loopTime
                 freqS = 1/Time
                 # print(freqS)
-                print(f"V_SidePalm: {V1}, V_ThumpPalm: {V2}, V_UpperPalm: {V3}, V_Middle: {V4}, V_Index: {V5}, V_Thump: {V6}")
+                # print(f"V_SidePalm: {V1}, V_ThumpPalm: {V2}, V_UpperPalm: {V3}, V_Middle: {V4}, V_Index: {V5}, V_Thump: {V6}")
+                print('\rFSR Voltage[mV]:', 
+                'V_SidePalm={:5.2f}, V_ThumpPalm={:5.2f}, V_UpperPalm={:5.2f}, V_Middle={:5.2f}, V_Index={:5.2f}, V_Thump={:5.2f}'.format(V1, V2, V3, V4, V5, V6),
+                end='        ')
                 row = {
                     f"V_SidePalm[{unit}]" : V1, # red wire
                     f"V_ThumpPalm[{unit}]" : V2, # yellow wire
                     f"V_UpperPalm[{unit}]" : V3, # green wire
                     f"V_Middle[{unit}]" : V4, # blue wire
                     f"V_Index[{unit}]" : V5, # blue wire with male jumper head
-                    f"V_Thump[{unit}]" : V6, # black wire
+                    f"V_Thumb[{unit}]" : V6, # black wire
                 }
                 collected_data.append(row)
                 # break

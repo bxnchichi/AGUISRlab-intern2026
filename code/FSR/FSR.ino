@@ -48,7 +48,12 @@ void loop() {
   sum_val5/=avg_size; // take average
   sum_val6/=avg_size; // take average
 
-  
+  if(sum_val1<3){sum_val1 = 0;}
+  if(sum_val2<3){sum_val2 = 0;}
+  if(sum_val3<3){sum_val3 = 0;}
+  if(sum_val4<10){sum_val4 = 0;}
+  if(sum_val5<3){sum_val5 = 0;}
+  if(sum_val6<3){sum_val6 = 0;}
   // Serial.println(sum_val1);
   Serial.println(String(sum_val1) + "," + String(sum_val2) + "," + String(sum_val3) + "," + String(sum_val4) + "," + String(sum_val5) + "," + String(sum_val6) + ",mV"); // print to serial port
   delay(10);

@@ -14,7 +14,7 @@ UDP_IP = "127.0.0.1"
 UDP_PORT = 12345
 
 # Configure the serial port for Leptrino force-torque sensor (Change 'COM3' to match your Windows device)
-port = 'COM3'
+port = 'COM8'
 baud_rate = 9600
 
 # ソケットの作成
@@ -22,7 +22,7 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.bind((UDP_IP, UDP_PORT))
 
 # Serial communication with Arduino (See in device maneger for port)
-port = 'COM4'
+port = 'COM7'
 baud_rate = 9600
 loopTime = 0.112 #program loop time
 
@@ -110,11 +110,12 @@ try:
                 V5 = float(V5)
                 V6 = float(V6)
 
+                if V1 > 
+
                 
-                print('\rtime', '{:5.2f}'.format(current_time - start_time), '[s]',
-                'Force: Fx={:5.2f}, Fy={:5.2f}, Fz={:5.2f}, FMagn = {:5.2f}'.format(latest_data[1], latest_data[2], latest_data[3], force_magnitude),
-                'FSR Voltage[mV]: V_SidePalm={:5.2f}, V_ThumpPalm={:5.2f}, V_UpperPalm={:5.2f}, V_Middle={:5.2f}, V_Index={:5.2f}, V_Thump={:5.2f}'.format(V1, V2, V3, V4, V5, V6),
-                end='')
+                print(f'\rtime {current_time - start_time:.2f} [s], Force: Fx={latest_data[1]:.2f}, Fy={latest_data[2]:.2f}, Fz={latest_data[3]:.2f}, FMagn = {force_magnitude:.2f}', 
+                      f'FSR Voltage[{unit}]: V_SidePalm={V1:.2f}, V_ThumbPalm={V2:.2f}, V_UpperPalm={V3:.2f}, V_Middle={V4:.2f}, V_Index={V5:.2f}, V_Thumb={V6:.2f}', 
+                      end='')
 
                 # Combine Data
                 elapsed_time = current_time - start_time
@@ -134,11 +135,11 @@ try:
                     "force_magnitude": force_magnitude,
                     "touch_count": touch,
                     f"V_SidePalm[{unit}]" : V1, # red wire
-                    f"V_ThumpPalm[{unit}]" : V2, # yellow wire
+                    f"V_ThumbPalm[{unit}]" : V2, # yellow wire
                     f"V_UpperPalm[{unit}]" : V3, # green wire
                     f"V_Middle[{unit}]" : V4, # blue wire
                     f"V_Index[{unit}]" : V5, # blue wire with male jumper head
-                    f"V_Thump[{unit}]" : V6, # black wire
+                    f"V_Thumb[{unit}]" : V6, # black wire
                 }
                 collected_data.append(row)  # 格納用リストに追加
 
@@ -157,6 +158,6 @@ finally:
 
 # CSVファイルに保存
 df = pd.DataFrame(collected_data)
-filename = "TryStaticSensor6.csv"
+filename = "Data/FSRCalibration/TryStaticData3/TryStaticSensor1.csv"
 df.to_csv(filename, index=False)
 print(f"Data saved to {filename}")
