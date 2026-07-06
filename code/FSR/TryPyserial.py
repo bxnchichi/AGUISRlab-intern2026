@@ -42,7 +42,7 @@ try:
                 V1 = float(V1)
                 V2 = float(V2)
                 V3 = float(V3)
-                V4 = float(V4)
+                V4 = float(V4) 
                 V5 = float(V5)
                 V6 = float(V6)
                 # calculate Sampling Frequency

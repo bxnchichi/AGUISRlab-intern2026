@@ -28,30 +28,32 @@ from Data.package.scatterPlotUtils import *
 # filepath = Path(f"Data/FSRCalibration/TryStaticData3/TryStaticSensor{senNo}.csv")
 # outputFolder = Path("Data/FSRCalibration/F-Vregress3")
 # col1 = "force_magnitude" 
-# VoltList = ['SidePalm', 'ThumpPalm', 'UpperPalm', 'Middle', 'Index', 'Thump']
+# VoltList = ['SidePalm', 'ThumbPalm', 'UpperPalm', 'Middle', 'Index', 'Thumb']
 # col2 = f"V_{VoltList[senNo-1]}[mV]"
 # ScatterPlotRegressions('save', filepath, col1, col2, outputFolder)
 
 for i in range(6):
     try:
+        # Vmax = 4000 + i
         print(f"Processing sensor {i+1} file")
         senNo = i + 1
         filepath = Path(f"Data/FSRCalibration/TryStaticData3/TryStaticSensor{senNo}.csv")
+        # filepath = Path(f"Data/FSRCalibration/TestInfo3/TestInfo{senNo}.csv")
         # filepath = Path(f"Data/FSRCalibration/TestInfo/{senNo}testInfo.csv")
         
         # # Add Calculated Force Column
-        # AddColumnCalculatedForce(filepath)
+        AddColumnCalculatedForce(filepath)
         
-        outputFolder = Path("Data/FSRCalibration/F-Vregress3")
+        outputFolder = Path("Data/FSRCalibration/CompareCal-MeasF3")
         # outputFolder.mkdir(parents=True, exist_ok=True)
         # outputCSV = Path(f"Data/FSRCalibration/AverageVoltageInRange1N/{senNo}.csv")
         col1 = "force_magnitude" 
-        VoltList = ['SidePalm', 'ThumpPalm', 'UpperPalm', 'Middle', 'Index', 'Thump']
-        # col2 = f"CalF{senNo}"
-        col2 = f"V_{VoltList[i]}[mV]"
-        ScatterPlotRegressions('save', filepath, col1, col2, outputFolder)
+        # VoltList = ['SidePalm', 'ThumpPalm', 'UpperPalm', 'Middle', 'Index', 'Thump']
+        col2 = f"CalF{senNo}"
+        # col2 = f"V_{VoltList[i]}[mV]"
+        # ScatterPlotRegressions('show', filepath, col1, col2, outputFolder)
         # average_voltage_per_newton(filepath, col1, col2, output_csv=outputCSV)
-        # ScatterPlotWithXY("save", filepath, col1, col2, outputFold=outputFolder)
+        ScatterPlotWithXY("save", filepath, col1, col2, outputFold=outputFolder)
     except Exception as e:
         print(f"Failed: {filepath.name}")
         print(e)

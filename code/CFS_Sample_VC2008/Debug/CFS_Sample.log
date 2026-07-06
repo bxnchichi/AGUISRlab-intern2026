@@ -1,1 +1,3 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(439,5): error MSB8020: The build tools for v145 (Platform Toolset = 'v145') cannot be found. To build using the v145 build tools, please install v145 build tools.  Alternatively, you may upgrade to the current Visual Studio tools by selecting the Project menu or right-click the solution, and then selecting "Retarget solution".
+﻿cl : command line  warning D9035: option 'Gm' has been deprecated and will be removed in a future release
+  CFS_Sample.cpp
+  CFS_Sample.vcxproj -> D:\bxn_lu\recovered\3rdyear\internship\intern\code\CFS_Sample_VC2008\Debug\CFS_Sample.exe

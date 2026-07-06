@@ -16,3 +16,29 @@ log((3900-V)/V) = -1.6561705682937151log(F) + 0.21215958253610973
 
 Sensor6 (Thump)
 log((4000-V)/V) = -1.6172681722599143log(F) + 0.7128206215795522
+
+
+Test 3
+
+Sensor 1 (Side Palm)
+Satuation Model Curve fit function: y = -510.3419103546171 + 4879.168650203865 * (1 - e^(-0.06420629500989627 * x))
+Satuation log 10 Model Curve fit function: log((4500-y)/y) = -1.8719516800859706log(x) + 2.0710733185189127
+
+Sensor 2 (Thumb Palm)
+Satuation Model Curve fit function: y = -578.3430891045141 + 4886.969974079362 * (1 - e^(-0.069493469927043 * x))
+Satuation log 10 Model Curve fit function: log((4500-y)/y) = -1.8590241458147658log(x) + 2.0438458995590167
+
+Sensor 3 (Upper Palm)
+Satuation Model Curve fit function: y = -212.6954334255461 + 4329.284882692548 * (1 - e^(-0.12905086153968578 * x))
+Satuation log 10 Model Curve fit function: log((4500-y)/y) = -1.2959177497683403log(x) + 1.0333003676988375
+
+Sensor 4 (Middle Finger)
+Satuation log 10 Model Curve fit function: log((3650-y)/y) = -1.4011271964139371log(x) + 0.2499510875238671
+
+Sensor 5 (Index Finger)
+Satuation log 10 Model Curve fit function: log((3800-y)/y) = -1.3035707998955808log(x) + 0.3040839221730824
+
+Sensor 6 (Thumb)
+Satuation Model Curve fit function: y = -566.7849530349916 + 3593.161799433332 * (1 - e^(-0.17096109484573394 * x))
+Satuation log 10 Model Curve fit function: log((3200-y)/y) = -1.8508990075743086log(x) + 1.362867464385802
+

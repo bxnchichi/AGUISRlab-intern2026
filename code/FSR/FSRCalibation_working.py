@@ -110,7 +110,7 @@ try:
                 V5 = float(V5)
                 V6 = float(V6)
 
-                if V1 > 
+                
 
                 
                 print(f'\rtime {current_time - start_time:.2f} [s], Force: Fx={latest_data[1]:.2f}, Fy={latest_data[2]:.2f}, Fz={latest_data[3]:.2f}, FMagn = {force_magnitude:.2f}', 
@@ -158,6 +158,9 @@ finally:
 
 # CSVファイルに保存
 df = pd.DataFrame(collected_data)
-filename = "Data/FSRCalibration/TryStaticData3/TryStaticSensor1.csv"
+filename = "Data/FSRCalibration/TestInfo3/Testinfo6.csv"
+# filename = "Data/FSRCalibration/TryStaticData3/TryStaticSensor6.csv"
 df.to_csv(filename, index=False)
 print(f"Data saved to {filename}")
+
+# qqqqqq
