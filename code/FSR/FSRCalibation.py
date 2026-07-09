@@ -14,7 +14,7 @@ UDP_IP = "127.0.0.1"
 UDP_PORT = 12345
 
 # Configure the serial port for Leptrino force-torque sensor (Change 'COM3' to match your Windows device)
-port = 'COM4'
+port = 'COM8'
 baud_rate = 9600
 
 # ソケットの作成
@@ -53,6 +53,7 @@ prev_z = 0.0
 count = 0
 judge = 0.2
 touch = None
+prevLine = None
 
 try:
     ser = serial.Serial(port, baud_rate, timeout=1)
@@ -67,16 +68,18 @@ try:
             latest_data = struct.unpack('7d', udp_data)
 
         # Read Arduino
-        line = ser.readline()
+        if  ser.in_waiting:
+            line = ser.readline().decode('utf-8', errors='ignore').strip()
 
         current_time = time.perf_counter()
 
         if current_time - last_display_time >= 0.009:#0.009秒間隔でモーキャプの値と最新のセンサの値を取得
             last_display_time = current_time
-    
+
+            if line == prevLine:
+                continue
             if line:
-                Data = line.decode('utf-8').strip()
-                V1, V2, V3, unit = Data.split(',')
+                V1, V2, V3, V4, V5, V6, unit = line.split(',')
             else:
                 continue
 
@@ -91,7 +94,7 @@ try:
                 prev_x = LPF_Fx
                 prev_y = LPF_Fy
                 prev_z = LPF_Fz
-                force_magnitude = math.sqrt(LPF_Fx**2+LPF_Fy**2+LPF_Fy**2)
+                force_magnitude = math.sqrt(LPF_Fx**2+LPF_Fy**2+LPF_Fz**2)
                 if force_magnitude > judge:#線を引いてる回数の判定
                     if touch == None:
                         count = count + 1
@@ -102,11 +105,17 @@ try:
                 # FSR glove
                 V1 = float(V1)
                 V2 = float(V2)
+                V3 = float(V3)
+                V4 = float(V4)
+                V5 = float(V5)
+                V6 = float(V6)
+
                 
-                print('\rtime', '{:5.2f}'.format(current_time - start_time), '[s]',
-                '\nForce: Fx={:5.2f}, Fy={:5.2f}, Fz={:5.2f}'.format(latest_data[1], latest_data[2], latest_data[3]),
-                '\nFSR Voltage[mV]: V1={:5.2f}, V2={:5.2f}'.format(V1, V2),
-                end='')
+
+                
+                print(f'\rtime {current_time - start_time:.2f} [s], Force: Fx={latest_data[1]:.2f}, Fy={latest_data[2]:.2f}, Fz={latest_data[3]:.2f}, FMagn = {force_magnitude:.2f}', 
+                      f'FSR Voltage[{unit}]: V_SidePalm={V1:.2f}, V_ThumbPalm={V2:.2f}, V_UpperPalm={V3:.2f}, V_Middle={V4:.2f}, V_Index={V5:.2f}, V_Thumb={V6:.2f}', 
+                      end='')
 
                 # Combine Data
                 elapsed_time = current_time - start_time
@@ -125,10 +134,17 @@ try:
                     "Mz": latest_data[6],
                     "force_magnitude": force_magnitude,
                     "touch_count": touch,
-                    "Volt_FSR1": V1,
-                    "Volt_FSR2": V2,
+                    f"V_SidePalm[{unit}]" : V1, # red wire
+                    f"V_ThumbPalm[{unit}]" : V2, # yellow wire
+                    f"V_UpperPalm[{unit}]" : V3, # green wire
+                    f"V_Middle[{unit}]" : V4, # blue wire
+                    f"V_Index[{unit}]" : V5, # blue wire with male jumper head
+                    f"V_Thumb[{unit}]" : V6, # black wire
+
                 }
                 collected_data.append(row)  # 格納用リストに追加
+
+                line = prevLine
 
         if keyboard.is_pressed('q'):
             print("\nKey 'q' pressed. Stopping reception.")
@@ -143,5 +159,9 @@ finally:
 
 # CSVファイルに保存
 df = pd.DataFrame(collected_data)
-df.to_csv("synchronized_data.csv", index=False)
-print("Data saved to synchronized_data.csv.")
+filename = "Data/FSRCalibration/TestInfo3/Testinfo6.csv"
+# filename = "Data/FSRCalibration/TryStaticData3/TryStaticSensor6.csv"
+df.to_csv(filename, index=False)
+print(f"Data saved to {filename}")
+
+# qqqqqq

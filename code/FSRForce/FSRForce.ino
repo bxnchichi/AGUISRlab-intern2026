@@ -49,7 +49,7 @@ float calculateForce(float voltage, float a, float b, float Vmax)
 {
     // Prevent invalid values
     if (voltage < 0.000001f)
-        voltage = 0.000001f;
+    return 0
 
     if (voltage >= Vmax)
         voltage = Vmax - 0.000001f;
