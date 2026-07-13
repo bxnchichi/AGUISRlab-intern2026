@@ -72,8 +72,12 @@ def AddColumnCalculatedForce(csv):
         VoltList = ['SidePalm', 'ThumbPalm', 'UpperPalm', 'Middle', 'Index', 'Thumb']
         col = f'V_{VoltList[i]}[mV]'
         # Temporary buffered voltage (original column is unchanged)
-        voltage = df[col].clip(lower=1e-6, upper=Vmax-1e-6)  # Avoid division by zero and log of zero
-        df[f"CalF{i+1}"] = 10**((1/a)*np.log10(Vmax/voltage-1) - (b/a))
+        voltage = df[col].clip(upper=Vmax-1e-6)  # Avoid division by zero and log of zero
+        df[f"CalF{i+1}"] = np.where(
+            voltage <= 0,
+            0,
+            10 ** ((1 / a) * np.log10(Vmax / voltage - 1) - (b / a))
+        )
         print(f"CalF{i+1} = 10**((1/{a})*np.log10({Vmax}/V_{VoltList[i]}-1) - ({b}/{a}))")
     df.to_csv(csv, index = False)
     print(df.columns)

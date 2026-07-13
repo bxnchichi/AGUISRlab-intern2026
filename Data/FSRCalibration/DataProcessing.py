@@ -44,16 +44,16 @@ for i in range(6):
         # # Add Calculated Force Column
         AddColumnCalculatedForce(filepath)
         
-        outputFolder = Path("Data/FSRCalibration/CompareCal-MeasF3")
-        # outputFolder.mkdir(parents=True, exist_ok=True)
-        # outputCSV = Path(f"Data/FSRCalibration/AverageVoltageInRange1N/{senNo}.csv")
-        col1 = "force_magnitude" 
-        # VoltList = ['SidePalm', 'ThumpPalm', 'UpperPalm', 'Middle', 'Index', 'Thump']
-        col2 = f"CalF{senNo}"
-        # col2 = f"V_{VoltList[i]}[mV]"
-        # ScatterPlotRegressions('show', filepath, col1, col2, outputFolder)
-        # average_voltage_per_newton(filepath, col1, col2, output_csv=outputCSV)
-        ScatterPlotWithXY("save", filepath, col1, col2, outputFold=outputFolder)
+        # outputFolder = Path("Data/FSRCalibration/CompareCal-MeasF3")
+        # # outputFolder.mkdir(parents=True, exist_ok=True)
+        # # outputCSV = Path(f"Data/FSRCalibration/AverageVoltageInRange1N/{senNo}.csv")
+        # col1 = "force_magnitude" 
+        # # VoltList = ['SidePalm', 'ThumpPalm', 'UpperPalm', 'Middle', 'Index', 'Thump']
+        # col2 = f"CalF{senNo}"
+        # # col2 = f"V_{VoltList[i]}[mV]"
+        # # ScatterPlotRegressions('show', filepath, col1, col2, outputFolder)
+        # # average_voltage_per_newton(filepath, col1, col2, output_csv=outputCSV)
+        # ScatterPlotWithXY("save", filepath, col1, col2, outputFold=outputFolder)
     except Exception as e:
         print(f"Failed: {filepath.name}")
         print(e)

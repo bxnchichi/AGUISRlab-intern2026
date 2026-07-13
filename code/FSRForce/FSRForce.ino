@@ -7,6 +7,7 @@ float R_0 = 10000.0; // known resistor value in [Ohms]
 float Vcc = 5.0; // supply voltage
 int i = 1;
 
+
 // Calibration parameters
 const float a_list[6] = {
     -1.8719516800859706,
@@ -35,9 +36,16 @@ const float Vmax_list[6] = {
     3200
 };
 
-const float limit[NUM_FSR] = {100, 100, 100, 30, 30, 100};
+const float limit[NUM_FSR] = {80, 80, 80, 20, 20, 80};
 
-
+const char* sensorNames[NUM_FSR] = {
+  " Side Palm",
+  " Thumb Palm",
+  " Upper Palm",
+  " Middle Finger",
+  " Index Finger",
+  " Thumb"
+};
 
 void setup() {
   Serial.begin(9600);
@@ -49,7 +57,7 @@ float calculateForce(float voltage, float a, float b, float Vmax)
 {
     // Prevent invalid values
     if (voltage < 0.000001f)
-    return 0
+    return 0;
 
     if (voltage >= Vmax)
         voltage = Vmax - 0.000001f;
@@ -83,9 +91,27 @@ void loop() {
         force[i] = limit[i];
       }
   }
-  
 
-  Serial.println(String(sum_val[0]) + "," + String(sum_val[1]) + "," + String(sum_val[2]) + "," + String(sum_val[3]) + "," + String(sum_val[4]) + "," + String(sum_val[5]) + ",mV," + String(force[0]) + "," + String(force[1]) + "," + String(force[2]) + "," + String(force[3]) + "," + String(force[4]) + "," + String(force[5]) + ",N"); // print to serial port
+    String output = String(force[0]) + "," + String(force[1]) + "," +
+                  String(force[2]) + "," + String(force[3]) + "," +
+                  String(force[4]) + "," + String(force[5]) + ",N";
+
+  // output += ",Touch:";
+
+  // bool first = true;
+  // for (int i = 0; i < NUM_FSR; i++) {
+  //   if (force[i] > 1) {
+  //     output += sensorNames[i];
+  //     first = false;
+  //   }
+  // }
+
+  // if (first) {
+  //   output += "None";
+  // }
+
+  Serial.println(output);
+  // Serial.println(String(sum_val[0]) + "," + String(sum_val[1]) + "," + String(sum_val[2]) + "," + String(sum_val[3]) + "," + String(sum_val[4]) + "," + String(sum_val[5]) + ",mV," + String(force[0]) + "," + String(force[1]) + "," + String(force[2]) + "," + String(force[3]) + "," + String(force[4]) + "," + String(force[5]) + ",N"); // print to serial port
   delay(10);
 
 }
