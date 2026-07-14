@@ -1,6 +1,6 @@
 import time
 import pandas as pd
-from HandFromMocap import SynchronizedFullHandTracker as HandTracker  
+from code.mocapCode.NotUsed.HandFromMocap import SynchronizedFullHandTracker as HandTracker  
 import keyboard
 
 class HandTrackerRecorder:

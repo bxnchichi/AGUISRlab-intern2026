@@ -97,7 +97,7 @@ class NatNetClient:
         self.rigid_body_listener = None
         self.new_frame_listener = None
         self.new_frame_with_data_listener = None
-        # self.data_description_listener = None
+        # self.skeleton_listener = None
 
         # Set Application Name
         self.__application_name = "Not Set"
@@ -2301,11 +2301,11 @@ class NatNetClient:
 
             offset_tmp, mocap_data = self.__unpack_mocap_data(data[offset:], packet_size, major, minor) #type: ignore  # noqa E501
             offset += offset_tmp
-            print("MoCap Frame: %d\n" % (mocap_data.prefix_data.frame_number))
+            # print("MoCap Frame: %d\n" % (mocap_data.prefix_data.frame_number))
             # get a string version of the data for output
             if print_level >= 1:
                 mocap_data_str = mocap_data.get_as_string()
-                print(" %s\n" % mocap_data_str)
+                # print(" %s\n" % mocap_data_str)
 
         elif message_id == self.NAT_MODELDEF:
             trace("Message ID : %3.1d NAT_MODELDEF" % message_id)

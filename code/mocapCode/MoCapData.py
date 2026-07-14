@@ -302,7 +302,7 @@ class RigidBody:
         if (self.marker_num > -1):
             out_str += " %3.1d" % (self.marker_num)
         out_str += "\n"
-        print(self.id_num)
+        # print(self.id_num)
         out_str += "%s  ID            : %3.1d\n" % (out_tab_str, self.id_num)
         # Position and orientation
         out_str += "%s  Position      : [%3.2f, %3.2f, %3.2f]\n" % (

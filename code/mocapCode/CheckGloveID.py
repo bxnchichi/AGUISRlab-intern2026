@@ -1,6 +1,5 @@
 import time
 from NatNetClient import NatNetClient
-
 # def discover_skeleton_ids(mocap_data):
 #     """Callback function that prints visible skeleton details."""
 #     if mocap_data.skeleton_data and mocap_data.skeleton_data.skeleton_list:
@@ -44,9 +43,5 @@ if __name__ == "__main__":
 
     client.run()
     
-    # Keep main execution thread alive long enough to catch the broadcast packet
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        client.shutdown()
+    time.sleep(0.006)
+    client.shutdown()

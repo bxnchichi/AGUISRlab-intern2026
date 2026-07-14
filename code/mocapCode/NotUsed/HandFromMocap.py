@@ -21,6 +21,8 @@ class SynchronizedFullHandTracker:
         self.client.local_ip_address = self.local_ip
         self.client.server_ip_address = self.server_ip
         self.client.use_multicast = self.use_multicast
+
+        self.new_frame_with_data_listener = self._internal_frame_callback
         
         
         self.data_queue = queue.Queue()
@@ -109,9 +111,10 @@ class SynchronizedFullHandTracker:
             # Finger Joints
             **finger_joint_angles,
         }
-    def _internal_frame_callback(self, mocap_data: MoCapData.MoCapData):
+    def _internal_frame_callback(self, data_dict):
         # print(type(mocap_data))
         # print(mocap_data)
+        mocap_data = data_dict["mocap_data"]
         record = self._extract_metrics(mocap_data)
         if record:
             self.data_queue.put(record)
