@@ -3,9 +3,14 @@ import keyboard
 import pandas as pd
 import math
 import numpy as np
+import serial
 
 from FinalFinalMocapCode import GloveData  # adjust import path to wherever GloveData class lives
 
+
+# Serial communication with Arduino (See in device maneger for port)
+port = 'COM5'
+baud_rate = 9600
 
 
 def quaternion_to_euler_and_matrix(q, degrees=False):  # オイラー角と回転行列を取得
@@ -45,7 +50,15 @@ HAND_ELEMENTS = [
 
 
 try:
+    ser = serial.Serial(port, baud_rate, timeout=1)
+    print(f"Successfully opened {ser.name}")
+    time.sleep(2) # Give the device a moment to initialize
     while True:
+
+        # Read Arduino
+        if  ser.in_waiting:
+            line = ser.readline().decode('utf-8', errors='ignore').strip()
+
         current_time = time.perf_counter()
 
         if current_time - last_display_time >= 0.009:  # 0.009秒間隔でモーキャプの値を取得
@@ -55,6 +68,15 @@ try:
             hand = glove_data.RightHandData
             if hand is None:
                 # no valid skeleton this tick (occlusion / dropped frame) -- skip
+                continue
+            
+            if line:
+                V1, V2, V3, V4, V5, V6, unit = line.split(',')
+            else:
+                continue
+            try:
+                V1, V2, V3, V4, V5, V6 = map(float, (V1, V2, V3, V4, V5, V6))
+            except ValueError:
                 continue
 
             # 手首の姿勢クオータニオン (w, x, y, z) -- .orie is [x,y,z,w]
@@ -71,6 +93,7 @@ try:
                   '{:5.2f}'.format(hand.orie[1]),
                   '{:5.2f}'.format(hand.orie[2]),
                   '{:5.2f}'.format(hand.orie[3]),
+                  f'FSR Voltage[{unit}]: V_SidePalm={V1:.2f}, V_ThumbPalm={V2:.2f}, V_UpperPalm={V3:.2f}, V_Middle={V4:.2f}, V_Index={V5:.2f}, V_Thumb={V6:.2f}', 
                   end='')
 
             elapsed_time = current_time - start_time
@@ -90,7 +113,13 @@ try:
                 "Wrist_qw": hand.orie[3],
                 "Wrist_yaw[rad]": euler_angles_rad[0],
                 "Wrist_pitch[rad]": euler_angles_rad[1],
-                "Wrist_roll[rad]": euler_angles_rad[2]
+                "Wrist_roll[rad]": euler_angles_rad[2],
+                f"V_SidePalm[{unit}]" : V1, # red wire
+                f"V_ThumbPalm[{unit}]" : V2, # yellow wire
+                f"V_UpperPalm[{unit}]" : V3, # green wire
+                f"V_Middle[{unit}]" : V4, # blue wire
+                f"V_Index[{unit}]" : V5, # blue wire with male jumper head
+                f"V_Thumb[{unit}]" : V6, # black wire
             })
             collected_data.append(row)
 
@@ -101,14 +130,10 @@ try:
 
 except KeyboardInterrupt:
     print("\nProgram interrupted by Ctrl+C.")
-
+except Exception as e:
+    print(f"\nUnexpected error: {e}")
 finally:
-    # NatNetClient spins up two non-daemon threads (data_thread, command_thread)
-    # that loop forever until told to stop -- without this, the process hangs
-    # after the CSV is written instead of actually exiting.
     glove_data.mocap.streamingClient.shutdown()
- 
-df = pd.DataFrame(collected_data)
-df.to_csv("synchronized_hand_data.csv", index=False)
-print("Data saved to synchronized_hand_data.csv.")
- 
+    df = pd.DataFrame(collected_data)
+    df.to_csv("synchronized_hand_data.csv", index=False)
+    print("Data saved to synchronized_hand_data.csv.")
