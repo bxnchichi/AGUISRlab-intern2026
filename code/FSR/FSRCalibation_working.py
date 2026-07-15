@@ -158,7 +158,7 @@ finally:
 
 # CSVファイルに保存
 df = pd.DataFrame(collected_data)
-filename = "Data/FSRCalibration/TestInfo3/Testinfo6.csv"
+filename = "Data/FSRCalibration/TestInfo3/TestinfoN-N2.csv"
 # filename = "Data/FSRCalibration/TryStaticData3/TryStaticSensor6.csv"
 df.to_csv(filename, index=False)
 print(f"Data saved to {filename}")
