@@ -1,4 +1,7 @@
 import time
+import os
+import glob
+import re
 import keyboard
 import pandas as pd
 import math
@@ -12,6 +15,58 @@ from FinalFinalMocapCode import GloveData  # adjust import path to wherever Glov
 port = 'COM5'
 baud_rate = 9600
 
+# Data collection Name
+output_dir = "Data/FinalDataCollection/"
+Tester = "Tester1"
+MATERIALS = ["Hard", "Soft"]
+
+def ask_tester_and_material():
+    tester = input("Enter tester name: ").strip()
+    while True:
+        print("Select material:")
+        for i, m in enumerate(MATERIALS, start=1):
+            print(f"  {i}: {m}")
+        choice = input(f"Enter choice (1-{len(MATERIALS)}): ").strip()
+        if choice in [str(i) for i in range(1, len(MATERIALS) + 1)]:
+            return tester, int(choice) - 1
+        print("Invalid choice, try again.")
+ 
+ 
+def find_max_test_no(tester, material_name):
+    """Scan the current directory for existing {tester}{material}{N}.csv
+    files and return the highest N found (0 if none exist)."""
+    pattern = f"{tester}{material_name}*.csv"
+    name_re = re.compile(rf"^{re.escape(tester)}{re.escape(material_name)}(\d+)\.csv$")
+    max_no = 0
+    for fname in glob.glob(pattern):
+        m = name_re.match(os.path.basename(fname))
+        if m:
+            max_no = max(max_no, int(m.group(1)))
+    return max_no
+ 
+ 
+def resolve_output_filename(tester, material_name, test_no, output_dir=output_dir):
+    """Return the filename to actually save to.
+ 
+    - If "{tester}{material}{test_no}.csv" doesn't exist, use it as-is.
+    - If it does exist, ask whether to replace it.
+        - Replace  -> reuse the same filename (overwrite).
+        - Don't    -> find the current max existing test number for this
+                      tester/material and save as max+1 instead.
+    """
+    filename = f"{output_dir}{tester}{material_name}{test_no}.csv"
+    if not os.path.exists(filename):
+        return filename
+ 
+    while True:
+        ans = input(f"'{filename}' already exists. Replace it? (y/n): ").strip().lower()
+        if ans in ("y", "yes"):
+            return filename
+        if ans in ("n", "no"):
+            new_test_no = find_max_test_no(tester, material_name) + 1
+            return f"{output_dir}{tester}{material_name}{new_test_no}.csv"
+        print("Please answer y or n.")
+ 
 
 def quaternion_to_euler_and_matrix(q, degrees=False):  # オイラー角と回転行列を取得
     w, x, y, z = q
@@ -135,5 +190,11 @@ except Exception as e:
 finally:
     glove_data.mocap.streamingClient.shutdown()
     df = pd.DataFrame(collected_data)
-    df.to_csv("synchronized_hand_data.csv", index=False)
-    print("Data saved to synchronized_hand_data.csv.")
+    if not df.empty:
+        # --- tester / material selection ---
+        Tester, k = ask_tester_and_material()
+        TestNo = 1  # first trial number to try; bumped automatically if needed at save time
+        # print(f"Selected tester: {Tester}, material: {material[k]}, starting with test number: {TestNo}")
+        filename = resolve_output_filename(Tester, MATERIALS[k], TestNo)
+        df.to_csv(filename, index=False)
+        print(f"Data saved to {filename}")

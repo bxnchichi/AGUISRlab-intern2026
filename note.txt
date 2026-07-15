@@ -122,3 +122,5 @@ Tomorrow
 Monday
 -> recalibrate 6 FSRs with 4k7 ohm on Palm and Thumb
 -> capture the force for the better Thai massage 
+
+Stiffness check to validate the data -> Use robot to push the material position and reaction force
