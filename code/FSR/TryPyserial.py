@@ -3,12 +3,12 @@ import time
 import keyboard
 import pandas as pd
 import math
-from scipy.signal import butter, filtfilt
+# from scipy.signal import butter, filtfilt
 import numpy as np
 import matplotlib.pyplot as plt
 
 # Configure the serial port (Change 'COM3' to match your Windows device)
-port = 'COM7'
+port = 'COM5'
 baud_rate = 9600
 loopTime = 0.185
 collected_data = []

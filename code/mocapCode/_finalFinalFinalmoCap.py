@@ -18,7 +18,7 @@ baud_rate = 9600
 # Data collection Name
 output_dir = "Data/FinalDataCollection/"
 Tester = "Tester1"
-MATERIALS = ["Hard", "Soft"]
+MATERIALS = ["Pillow", "Foam", "Wood"]
 
 def ask_tester_and_material():
     tester = input("Enter tester name: ").strip()
@@ -32,10 +32,10 @@ def ask_tester_and_material():
         print("Invalid choice, try again.")
  
  
-def find_max_test_no(tester, material_name):
+def find_max_test_no(tester, material_name, outputFold = output_dir):
     """Scan the current directory for existing {tester}{material}{N}.csv
     files and return the highest N found (0 if none exist)."""
-    pattern = f"{tester}{material_name}*.csv"
+    pattern = f"{outputFold}{tester}{material_name}*.csv"
     name_re = re.compile(rf"^{re.escape(tester)}{re.escape(material_name)}(\d+)\.csv$")
     max_no = 0
     for fname in glob.glob(pattern):
@@ -64,6 +64,7 @@ def resolve_output_filename(tester, material_name, test_no, output_dir=output_di
             return filename
         if ans in ("n", "no"):
             new_test_no = find_max_test_no(tester, material_name) + 1
+            # print(new_test_no)
             return f"{output_dir}{tester}{material_name}{new_test_no}.csv"
         print("Please answer y or n.")
  
@@ -196,5 +197,6 @@ finally:
         TestNo = 1  # first trial number to try; bumped automatically if needed at save time
         # print(f"Selected tester: {Tester}, material: {material[k]}, starting with test number: {TestNo}")
         filename = resolve_output_filename(Tester, MATERIALS[k], TestNo)
+        print(filename)
         df.to_csv(filename, index=False)
         print(f"Data saved to {filename}")
