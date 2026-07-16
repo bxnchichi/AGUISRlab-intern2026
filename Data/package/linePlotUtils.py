@@ -22,7 +22,7 @@ sampling_rate = 100
 #                            ░░░░░░                                                   
 #-----------------------------------------------------------------------------------------------------------------------------
 
-def detect_rising_edges(csv_file, processed_column, column="LPF_Fcz", on_threshold=10.0, off_threshold=5.0, min_gap=100):
+def detect_rising_edges(df, processed_column, column="LPF_Fcz", on_threshold=10.0, off_threshold=10.0, min_gap=100):
     """
     Detect contact onset using hysteresis.
 
@@ -42,11 +42,12 @@ def detect_rising_edges(csv_file, processed_column, column="LPF_Fcz", on_thresho
     edge_indices : ndarray
     """
 
-    Base_signal = pd.read_csv(csv_file)[column].to_numpy()
-    Processed_signal = pd.read_csv(csv_file)[processed_column].to_numpy()
+    Base_signal = df[column].to_numpy()
+    Processed_signal = df[processed_column].to_numpy()
     
 
-    edges = []
+    rising_edges = []
+    edge_length = np.inf
     armed = True
     last_edge = -np.inf
 
@@ -54,15 +55,51 @@ def detect_rising_edges(csv_file, processed_column, column="LPF_Fcz", on_thresho
 
         if armed:
             if value >= on_threshold and (i - last_edge) > min_gap:
-                edges.append(i)
+                if i != 0:
+                    rising_edges.append(i)
                 last_edge = i
                 armed = False
 
         else:
             if value <= off_threshold:
+                if i != 0 and len(rising_edges) > 0:
+                    if i - rising_edges[-1] < min_gap:
+                        rising_edges.pop()  # Remove the last edge if it's too close
+                    else:
+                        edge_length = min(edge_length, i - rising_edges[-1]) 
                 armed = True
 
-    return Processed_signal, Base_signal, np.array(edges)
+    return Processed_signal, Base_signal, np.array(rising_edges), edge_length
+
+def detect_touching_point(df, column, on_threshold=10.0, off_threshold=10.0, min_gap=100):
+
+    Base_signal = df[column].to_numpy()
+    
+
+    rising_edges = []
+    edge_length = np.inf
+    armed = True
+    last_edge = -np.inf
+
+    for i, value in enumerate(Base_signal):
+
+        if armed:
+            if value >= on_threshold and (i - last_edge) > min_gap:
+                if i != 0:
+                    rising_edges.append(i)
+                last_edge = i
+                armed = False
+
+        else:
+            if value <= off_threshold:
+                if i != 0 and len(rising_edges) > 0:
+                    if i - rising_edges[-1] < min_gap:
+                        rising_edges.pop()  # Remove the last edge if it's too close
+                    else:
+                        edge_length = min(edge_length, i - rising_edges[-1]) 
+                armed = True
+
+    return Base_signal, np.array(rising_edges), edge_length
 
 def signal_has_plateau(
     signal,
@@ -470,7 +507,7 @@ def plotAlignedFile(filepath, command, processed_column="LPF_Fz", output_folder=
     # plot_aligned(aligned, t, mean, filepath, command, processed_column=processed_column, output_folder = output_folder)
     return mean
 
-def plotAlignedFolder(folder, command,  processed_column="LPF_Fz", output_folder = None):
+def plotAlignedFolder(folder, command,  processed_column, output_folder = None):
     if not folder.exists():
         print(f"Folder not found: {folder.resolve()}")
         return
@@ -795,23 +832,23 @@ def plotMeanByContactSurfaceCases(means, command, processed_column="LPF_Fz", out
 
 #plt.show only
 def plot2SignalAllCSV(
-    filepath,
+    df,
     force_col="LPF_Fz",
     pos_col="Penpos_z[mm]",
     min_z=275,
     max_z=450
 ):
 
-    df = pd.read_csv(filepath)
+    
 
     force = df[force_col].copy()
     z_pos = df[pos_col].copy()
 
-    if 'pos' in pos_col.lower():
-        mask = (z_pos >= min_z) & (z_pos <= max_z)
+    # if 'pos' in pos_col.lower():
+    #     mask = (z_pos >= min_z) & (z_pos <= max_z)
 
-        force[~mask] = np.nan
-        z_pos[~mask] = np.nan
+    #     force[~mask] = np.nan
+    #     z_pos[~mask] = np.nan
 
     fig, ax1 = plt.subplots(figsize=(12, 6))
 
@@ -824,7 +861,7 @@ def plot2SignalAllCSV(
     ax1.set_ylabel(force_col)
     ax2.set_ylabel(pos_col)
 
-    plt.title(f"{filepath.stem}: {force_col} vs {pos_col}")
+    plt.title(f"{force_col} vs {pos_col}")
     plt.grid(True)
     plt.tight_layout()
     plt.show()
