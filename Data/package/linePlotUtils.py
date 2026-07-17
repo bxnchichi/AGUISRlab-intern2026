@@ -63,15 +63,15 @@ def detect_rising_edges(df, processed_column, column="LPF_Fcz", on_threshold=15.
         else:
             if value <= off_threshold:
                 if i != 0 and len(rising_edges) > 0:
-                    if i - rising_edges[-1] < min_gap:
+                    if i - rising_edges[-1] < min_gap or i > len(Base_signal):
                         rising_edges.pop()  # Remove the last edge if it's too close
                     else:
                         edge_length.append(i - rising_edges[-1]) 
                 armed = True
-
+        # print(i)
     return Processed_signal, Base_signal, np.array(rising_edges), np.array(edge_length)
 
-def detect_touching_point(df, column, on_threshold=2, off_threshold=5, min_gap=100):
+def detect_touching_point(df, column, on_threshold=10, off_threshold=10, min_gap=100):
 
     Base_signal = df[column].to_numpy()
     
