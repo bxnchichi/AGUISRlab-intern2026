@@ -51,6 +51,12 @@ def AddSumForceColumn(csv):
     df.to_csv(csv, index = False)
     print(df.columns)
 
+def AddSumForceColumn(csv):
+    df = pd.read_csv(csv)
+    df["SumForcePalm"] = df["V_SidePalm[N]"] + df["V_ThumbPalm[N]"] + df["V_UpperPalm[N]"]
+    df.to_csv(csv, index = False)
+    print(df.columns)
+
 def AddColumnCalculatedForce(csv):
     df = pd.read_csv(csv)
     # # old Version

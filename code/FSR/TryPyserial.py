@@ -8,7 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Configure the serial port (Change 'COM3' to match your Windows device)
-port = 'COM5'
+port = 'COM7'
 baud_rate = 9600
 loopTime = 0.185
 collected_data = []
