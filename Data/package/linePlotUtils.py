@@ -22,7 +22,7 @@ sampling_rate = 100
 #                            ░░░░░░                                                   
 #-----------------------------------------------------------------------------------------------------------------------------
 
-def detect_rising_edges(df, processed_column, column="LPF_Fcz", on_threshold=10.0, off_threshold=10.0, min_gap=100):
+def detect_rising_edges(df, processed_column, column="LPF_Fcz", on_threshold=15.0, off_threshold=15.0, min_gap=100):
     """
     Detect contact onset using hysteresis.
 
@@ -47,7 +47,7 @@ def detect_rising_edges(df, processed_column, column="LPF_Fcz", on_threshold=10.
     
 
     rising_edges = []
-    edge_length = np.inf
+    edge_length = []
     armed = True
     last_edge = -np.inf
 
@@ -66,40 +66,39 @@ def detect_rising_edges(df, processed_column, column="LPF_Fcz", on_threshold=10.
                     if i - rising_edges[-1] < min_gap:
                         rising_edges.pop()  # Remove the last edge if it's too close
                     else:
-                        edge_length = min(edge_length, i - rising_edges[-1]) 
+                        edge_length.append(i - rising_edges[-1]) 
                 armed = True
 
-    return Processed_signal, Base_signal, np.array(rising_edges), edge_length
+    return Processed_signal, Base_signal, np.array(rising_edges), np.array(edge_length)
 
-def detect_touching_point(df, column, on_threshold=10.0, off_threshold=10.0, min_gap=100):
+def detect_touching_point(df, column, on_threshold=2, off_threshold=5, min_gap=100):
 
     Base_signal = df[column].to_numpy()
     
 
-    rising_edges = []
-    edge_length = np.inf
+    touching_points = []
+    edge_length = []
     armed = True
     last_edge = -np.inf
 
     for i, value in enumerate(Base_signal):
 
         if armed:
-            if value >= on_threshold and (i - last_edge) > min_gap:
+            if value <= on_threshold and (i - last_edge) > min_gap:
                 if i != 0:
-                    rising_edges.append(i)
+                    touching_points.append(i)
                 last_edge = i
                 armed = False
-
         else:
-            if value <= off_threshold:
-                if i != 0 and len(rising_edges) > 0:
-                    if i - rising_edges[-1] < min_gap:
-                        rising_edges.pop()  # Remove the last edge if it's too close
+            if value >= off_threshold:
+                if i != 0 and len(touching_points) > 0:
+                    if i - touching_points[-1] < min_gap:
+                        touching_points.pop()  # Remove the last touching point if it's too close
                     else:
-                        edge_length = min(edge_length, i - rising_edges[-1]) 
+                        edge_length.append(i - touching_points[-1]) 
                 armed = True
 
-    return Base_signal, np.array(rising_edges), edge_length
+    return np.array(touching_points), np.array(edge_length)
 
 def signal_has_plateau(
     signal,
@@ -852,7 +851,7 @@ def plot2SignalAllCSV(
 
     fig, ax1 = plt.subplots(figsize=(12, 6))
 
-    ax1.plot(force, label=force_col)
+    ax1.plot(force, color='blue', label=force_col)
 
     ax2 = ax1.twinx()
     ax2.plot(z_pos, color = 'red', label=pos_col)
@@ -860,7 +859,7 @@ def plot2SignalAllCSV(
     ax1.set_xlabel("Sample")
     ax1.set_ylabel(force_col)
     ax2.set_ylabel(pos_col)
-
+    plt.legend()
     plt.title(f"{force_col} vs {pos_col}")
     plt.grid(True)
     plt.tight_layout()

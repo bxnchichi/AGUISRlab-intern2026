@@ -119,7 +119,7 @@ try:
 
         if current_time - last_display_time >= 0.009:  # 0.009秒間隔でモーキャプの値を取得
             last_display_time = current_time
-            glove_data.run()  # updates glove_data.RightqHandData internally
+            glove_data.run()  # updates glove_data.RightHandData internally
 
             hand = glove_data.RightHandData
             if hand is None:
