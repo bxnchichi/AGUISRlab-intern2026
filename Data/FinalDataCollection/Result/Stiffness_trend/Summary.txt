@@ -1,0 +1,45 @@
+--- Ao ---
+              spearman_r  spearman_p     slope  intercept  n_points
+surface                                                            
+ThumbPalm       0.956183    0.002838  0.056594   0.359920         6
+SidePalm        0.478091    0.337502  0.032549   0.370079         6
+UpperPalm      -0.836660    0.037841 -0.048347   0.137223         6
+Index          -0.836660    0.037841 -0.016221   0.066430         6
+Thumb          -0.889001    0.017797 -0.024575   0.066348         6
+SumForcePalm    0.956183    0.002838  0.040796   0.867222         6
+--- Ben ---
+              spearman_r  spearman_p     slope  intercept  n_points
+surface                                                            
+ThumbPalm       0.478091    0.337502  0.023651   0.515909         6
+SidePalm        0.478091    0.337502  0.019572   0.280585         6
+UpperPalm      -0.478091    0.337502 -0.045868   0.194283         6
+Index           0.597614    0.210295  0.003615   0.006635         6
+Thumb          -0.848528    0.032678 -0.000970   0.002587         6
+SumForcePalm   -0.597614    0.210295 -0.002645   0.990778         6
+--- Daichi ---
+              spearman_r  spearman_p     slope  intercept  n_points
+surface                                                            
+ThumbPalm       0.239046    0.648261  0.030348   0.397975         6
+SidePalm        0.239046    0.648261  0.002757   0.355640         6
+UpperPalm      -0.478091    0.337502 -0.031118   0.159299         6
+Index           0.956183    0.002838  0.013001   0.008128         6
+Thumb          -0.478091    0.337502 -0.014988   0.078958         6
+SumForcePalm    0.000000    1.000000  0.001987   0.912914         6
+--- Hannah ---
+              spearman_r  spearman_p     slope  intercept  n_points
+surface                                                            
+ThumbPalm      -0.956183    0.002838 -0.083436   0.538928         6
+SidePalm        0.597614    0.210295  0.083550   0.302276         6
+UpperPalm       0.000000    1.000000 -0.004117   0.141415         6
+Index           0.000000    1.000000  0.004002   0.017382         6
+Thumb                NaN         NaN  0.000000   0.000000         6
+SumForcePalm    0.000000    1.000000 -0.004002   0.982618         6
+--- Oni ---
+              spearman_r  spearman_p     slope  intercept  n_points
+surface                                                            
+ThumbPalm       0.119523    0.821569  0.001998   0.306489         6
+SidePalm       -0.956183    0.002838 -0.071806   0.485716         6
+UpperPalm       0.956183    0.002838  0.107179   0.076666         6
+Index          -0.956183    0.002838 -0.012733   0.043250         6
+Thumb          -0.836660    0.037841 -0.024639   0.087879         6
+SumForcePalm    0.836660    0.037841  0.037372   0.868871         6
